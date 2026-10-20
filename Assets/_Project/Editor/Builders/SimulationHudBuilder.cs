@@ -7,7 +7,7 @@ using static FireReady.EditorTools.SetupHudBuilder;
 
 namespace FireReady.EditorTools
 {
-    /// <summary>Builds the simulation HUD (design screens 8 and 9) and the completion card.</summary>
+    /// <summary>Builds the simulation HUD (design screens 8 and 9).</summary>
     internal static class SimulationHudBuilder
     {
         const string CanvasName = "Simulation HUD";
@@ -201,29 +201,9 @@ namespace FireReady.EditorTools
             captionLabel.alignment = TextAlignmentOptions.Center;
             captionLabel.textWrappingMode = TextWrappingModes.NoWrap;
 
-            // ---- Completion card
-            var completion = Node("Completion", safe);
-            Place(completion, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(358 * Pt, 0), new Vector2(0.5f, 0.5f));
-            Rounded(completion, Hex(0x171B21), 22 * Pt);
-            var compLayout = completion.gameObject.AddComponent<VerticalLayoutGroup>();
-            compLayout.padding = new RectOffset((int)(20 * Pt), (int)(20 * Pt), (int)(24 * Pt), (int)(20 * Pt));
-            compLayout.spacing = 12 * Pt;
-            compLayout.childControlWidth = compLayout.childControlHeight = true;
-            compLayout.childForceExpandWidth = true;
-            compLayout.childForceExpandHeight = false;
-            completion.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-            var compTitle = Label(completion, "Title", "Fire extinguished", 28, TextColor, FontStyles.Bold);
-            compTitle.alignment = TextAlignmentOptions.Center;
-            var compMeta = Label(completion, "Meta", "Office waste bin · Guided · 00:00", 14, Muted, FontStyles.Normal);
-            compMeta.alignment = TextAlignmentOptions.Center;
-            var compBody = Label(completion, "Body", "You put the fire out.", 16, Secondary, FontStyles.Normal);
-            compBody.alignment = TextAlignmentOptions.Center;
-            var restart = Pill(completion, "Restart Button", "Restart", Blue, Color.white, 54);
-
             // ---- View
             var view = canvasGo.AddComponent<SimulationHudView>();
             SetRef(view, "hudRoot", hud.gameObject);
-            SetRef(view, "completionCard", completion.gameObject);
             SetRef(view, "scenarioTitle", title);
             SetRef(view, "timerLabel", timer);
             SetRef(view, "trendBadge", badgeImage);
@@ -267,10 +247,6 @@ namespace FireReady.EditorTools
             SetRef(view, "alarmIcon", alarmCircle);
             SetRef(view, "squeezeButton", squeeze);
             SetRef(view, "evacuateButton", evacuate);
-            SetRef(view, "completionTitle", compTitle);
-            SetRef(view, "completionBody", compBody);
-            SetRef(view, "completionMeta", compMeta);
-            SetRef(view, "restartButton", restart);
             return view;
         }
 

@@ -3,6 +3,7 @@ using FireReady.App;
 using FireReady.AR;
 using FireReady.Simulation;
 using FireReady.Training;
+using FireReady.Data;
 using FireReady.UI;
 using Unity.XR.CoreUtils;
 using UnityEditor;
@@ -195,8 +196,13 @@ namespace FireReady.EditorTools
             var scenarioController = GetOrAdd<ScenarioController>(systems);
             var extinguishers = GetOrAdd<ExtinguisherController>(systems);
             var steps = GetOrAdd<GuidedStepTracker>(systems);
-            var steamPool = Pool(systems.transform, "Steam Pool", scenario.Steam, "Steam pool");
-            var splashPool = Pool(systems.transform, "Splash Pool", scenario.Splash, "Splash pool");
+            var recorder = GetOrAdd<SessionRecorder>(systems);
+            var archiver = GetOrAdd<SessionArchiver>(systems);
+            var steamPrefab = AssetDatabase.LoadAssetAtPath<PooledEffect>("Assets/_Project/Prefabs/Effects/SteamPuff.prefab");
+            var splashPrefab = AssetDatabase.LoadAssetAtPath<PooledEffect>("Assets/_Project/Prefabs/Effects/SplashPuff.prefab");
+            Log($"effect prefabs: steam={(steamPrefab != null)}, splash={(splashPrefab != null)}");
+            var steamPool = Pool(systems.transform, "Steam Pool", steamPrefab, "Steam pool");
+            var splashPool = Pool(systems.transform, "Splash Pool", splashPrefab, "Splash pool");
             SetRef(extinguishers, "steamPool", steamPool);
             SetRef(extinguishers, "splashPool", splashPool);
 
@@ -204,6 +210,7 @@ namespace FireReady.EditorTools
             var rounded = AssetDatabase.LoadAssetAtPath<Sprite>(RoundedSprite);
             var hud = SetupHudBuilder.Build(rounded);
             var simHud = SimulationHudBuilder.Build(rounded);
+            var menus = MenusBuilder.Build(rounded);
 
             SetRef(bootstrapper, "arSession", session);
             SetRef(bootstrapper, "raycastManager", raycasts);
@@ -220,6 +227,10 @@ namespace FireReady.EditorTools
             SetRef(bootstrapper, "scenario", scenarioController);
             SetRef(bootstrapper, "extinguishers", extinguishers);
             SetRef(bootstrapper, "guidedSteps", steps);
+            SetRef(bootstrapper, "sessionRecorder", recorder);
+            SetRef(bootstrapper, "sessionArchiver", archiver);
+            SetRef(bootstrapper, "debrief", menus.Debrief);
+            SetRef(bootstrapper, "history", menus.History);
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);

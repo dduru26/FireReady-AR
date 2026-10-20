@@ -8,6 +8,7 @@
         "FireReady.UI",
         "FireReady.App",
         "FireReady.Training",
+        "FireReady.Data",
         "Unity.XR.ARFoundation",
         "Unity.XR.CoreUtils",
         "Unity.InputSystem",
