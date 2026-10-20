@@ -268,3 +268,13 @@ namespace FireReady.Core
     public readonly struct HistoryRequested : IGameEvent { }
     public readonly struct MainMenuRequested : IGameEvent { }
 }
+
+namespace FireReady.Core
+{
+    /// <summary>The caption line for whatever is audible right now (FR-24).</summary>
+    public readonly struct CaptionChanged : IGameEvent
+    {
+        public readonly string Text;
+        public CaptionChanged(string text) => Text = text;
+    }
+}

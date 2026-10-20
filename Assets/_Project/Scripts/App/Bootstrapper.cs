@@ -1,4 +1,5 @@
 using FireReady.AR;
+using FireReady.Audio;
 using FireReady.Core;
 using FireReady.Data;
 using FireReady.Simulation;
@@ -34,6 +35,7 @@ namespace FireReady.App
         [SerializeField] ExtinguisherController extinguishers;
         [SerializeField] GuidedStepTracker guidedSteps;
         [SerializeField] ScenarioLoader scenarioLoader;
+        [SerializeField] AudioManager audioManager;
         [SerializeField] SessionRecorder sessionRecorder;
         [SerializeField] SessionArchiver sessionArchiver;
 
@@ -83,6 +85,7 @@ namespace FireReady.App
             ok &= Check(extinguishers, nameof(extinguishers));
             ok &= Check(guidedSteps, nameof(guidedSteps));
             ok &= Check(scenarioLoader, nameof(scenarioLoader));
+            ok &= Check(audioManager, nameof(audioManager));
             ok &= Check(setupHud, nameof(setupHud));
             ok &= Check(simulationHud, nameof(simulationHud));
             ok &= Check(sessionRecorder, nameof(sessionRecorder));

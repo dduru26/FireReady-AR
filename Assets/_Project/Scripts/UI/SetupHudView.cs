@@ -35,6 +35,8 @@ namespace FireReady.UI
         [SerializeField] TMP_Text pausedTrackingLabel;
         [SerializeField] Image pausedTrackingBackground;
         [SerializeField] Button resumeButton;
+        [SerializeField] Button pausedRestartButton;
+        [SerializeField] Button pausedMenuButton;
 
         SimulationStateId m_State;
         bool m_Tracking = true;
@@ -45,6 +47,10 @@ namespace FireReady.UI
             moveButton.onClick.AddListener(() => EventBus.Publish(new RepositionRequested()));
             confirmButton.onClick.AddListener(() => EventBus.Publish(new PlacementConfirmed()));
             resumeButton.onClick.AddListener(() => EventBus.Publish(new ResumeRequested()));
+            if (pausedRestartButton != null)
+                pausedRestartButton.onClick.AddListener(() => EventBus.Publish(new RestartRequested()));
+            if (pausedMenuButton != null)
+                pausedMenuButton.onClick.AddListener(() => EventBus.Publish(new MainMenuRequested()));
             ShowOnly(null);
             SetStatus(null, default);
         }

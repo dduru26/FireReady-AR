@@ -106,7 +106,6 @@ namespace FireReady.UI
             warningCard.SetActive(false);
             ShowEmptyHand();
             SetChipsUnknown();
-            UpdateCaption();
         }
 
         void OnEnable()
@@ -125,6 +124,7 @@ namespace FireReady.UI
             EventBus.Subscribe<SprayStateChanged>(OnSpray);
             EventBus.Subscribe<SessionEnded>(OnSessionEnded);
             EventBus.Subscribe<SessionReset>(OnSessionReset);
+            EventBus.Subscribe<CaptionChanged>(OnCaption);
         }
 
         void OnDisable()
@@ -143,6 +143,7 @@ namespace FireReady.UI
             EventBus.Unsubscribe<SprayStateChanged>(OnSpray);
             EventBus.Unsubscribe<SessionEnded>(OnSessionEnded);
             EventBus.Unsubscribe<SessionReset>(OnSessionReset);
+            EventBus.Unsubscribe<CaptionChanged>(OnCaption);
         }
 
         void OnSessionReset(SessionReset e)
@@ -157,7 +158,6 @@ namespace FireReady.UI
             stepCard.SetActive(!m_Assessment);
             ShowEmptyHand();
             SetChipsUnknown();
-            UpdateCaption();
             hudRoot.SetActive(false);
         }
 
@@ -372,13 +372,14 @@ namespace FireReady.UI
         void OnSpray(SprayStateChanged e)
         {
             m_Spraying = e.Spraying;
-            UpdateCaption();
         }
 
-        void UpdateCaption()
+        // Captions for the sound cues (FR-24), composed by the AudioManager.
+        void OnCaption(CaptionChanged e)
         {
-            // Captions for the sound cues (FR-24); the audio itself plays from the AudioManager.
-            captionLabel.text = m_Spraying ? "Fire crackling · spray hissing" : "Fire crackling";
+            bool show = !string.IsNullOrEmpty(e.Text);
+            captionLabel.transform.parent.gameObject.SetActive(show);
+            if (show) captionLabel.text = e.Text;
         }
 
         // ---- Actions -------------------------------------------------------------------

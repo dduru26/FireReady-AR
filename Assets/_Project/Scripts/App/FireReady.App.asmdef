@@ -8,6 +8,7 @@
         "FireReady.UI",
         "FireReady.Training",
         "FireReady.Data",
+        "FireReady.Audio",
         "Unity.XR.ARFoundation"
     ],
     "includePlatforms": [],
