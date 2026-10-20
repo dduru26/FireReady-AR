@@ -98,7 +98,7 @@ namespace FireReady.EditorSetup
             if (pm == null) { Log("no ARPlaneManager in scene"); return; }
             pm.enabled = true;
 
-            var overlayType = Type.GetType("FireReady.AR.ARDebugOverlay, Assembly-CSharp");
+            var overlayType = Type.GetType("FireReady.AR.ARDebugOverlay, FireReady.AR");
             if (overlayType == null) { Log("ARDebugOverlay type not compiled yet"); return; }
             Component overlay = pm.GetComponent(overlayType);
             if (overlay == null) overlay = pm.gameObject.AddComponent(overlayType);

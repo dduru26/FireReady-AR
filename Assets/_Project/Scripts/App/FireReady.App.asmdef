@@ -1,0 +1,20 @@
+{
+    "name": "FireReady.App",
+    "rootNamespace": "FireReady.App",
+    "references": [
+        "FireReady.Core",
+        "FireReady.AR",
+        "FireReady.Simulation",
+        "FireReady.UI",
+        "Unity.XR.ARFoundation"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

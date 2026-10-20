@@ -1,0 +1,25 @@
+{
+    "name": "FireReady.Editor",
+    "rootNamespace": "FireReady.EditorTools",
+    "references": [
+        "FireReady.Core",
+        "FireReady.AR",
+        "FireReady.Simulation",
+        "FireReady.UI",
+        "FireReady.App",
+        "Unity.XR.ARFoundation",
+        "Unity.XR.CoreUtils",
+        "Unity.InputSystem",
+        "UnityEngine.UI",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": ["Editor"],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
