@@ -1,5 +1,6 @@
 using System;
 using FireReady.App;
+using FireReady.Core;
 using FireReady.AR;
 using FireReady.Simulation;
 using FireReady.Training;
@@ -190,6 +191,10 @@ namespace FireReady.EditorTools
             var tracking = GetOrAdd<TrackingMonitor>(systems);
             var taps = GetOrAdd<ScreenTapDetector>(systems);
 
+            // Reload by path: references taken before the Addressables setup can go stale.
+            settings = AssetDatabase.LoadAssetAtPath<PlacementSettings>(SettingsPath);
+            reticle = AssetDatabase.LoadAssetAtPath<PlacementReticle>(ReticlePrefab);
+            Log($"placement assets: settings={(settings != null)}, reticle={(reticle != null)}");
             SetRef(placement, "settings", settings);
             SetRef(placement, "reticlePrefab", reticle);
             // Scenario content arrives through Addressables at runtime, so the scene must not reference it.
@@ -214,7 +219,10 @@ namespace FireReady.EditorTools
             var rounded = AssetDatabase.LoadAssetAtPath<Sprite>(RoundedSprite);
             var hud = SetupHudBuilder.Build(rounded);
             var simHud = SimulationHudBuilder.Build(rounded);
-            var menus = MenusBuilder.Build(rounded, scenario.Catalog);
+            // Reload by path: references taken before the Addressables setup can go stale.
+            var catalog = AssetDatabase.LoadAssetAtPath<ScenarioCatalog>(ScenarioBuilder.CatalogPath);
+            Log($"scenario catalog: {(catalog != null ? catalog.scenarios.Count + " scenarios" : "MISSING")}");
+            var menus = MenusBuilder.Build(rounded, catalog);
 
             SetRef(bootstrapper, "arSession", session);
             SetRef(bootstrapper, "raycastManager", raycasts);
