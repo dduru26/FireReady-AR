@@ -121,6 +121,15 @@ namespace FireReady.EditorTools
             statusRowLayout.childForceExpandWidth = true;
             var statusLabel = Label(statusRow, "Label", "Floor found again. You can resume.", 15, SafeText, FontStyles.Bold);
             var resumeButton = Pill(dialog, "Resume Button", "Resume", Blue, Color.white, 56);
+            var leaveRow = Node("Leave Buttons", dialog);
+            var leaveLayout = leaveRow.gameObject.AddComponent<HorizontalLayoutGroup>();
+            leaveLayout.spacing = 10 * Pt;
+            leaveLayout.childControlWidth = leaveLayout.childControlHeight = true;
+            leaveLayout.childForceExpandWidth = leaveLayout.childForceExpandHeight = true;
+            leaveRow.gameObject.AddComponent<LayoutElement>().preferredHeight = 52 * Pt;
+            var restartButton = Pill(leaveRow, "Restart Button", "Restart", new Color(1f, 1f, 1f, 0.14f), TextColor, 52);
+            var menuButton = Pill(leaveRow, "Menu Button", "Main menu", new Color(1f, 1f, 1f, 0.14f), TextColor, 52);
+            Label(dialog, "Leave Note", "Leaving now ends this session without a score.", 13, Hex(0xAEB4BE), FontStyles.Normal).alignment = TextAlignmentOptions.Center;
 
             // View
             var view = canvasGo.AddComponent<SetupHudView>();
@@ -137,6 +146,8 @@ namespace FireReady.EditorTools
             SetRef(view, "pausedTrackingLabel", statusLabel);
             SetRef(view, "pausedTrackingBackground", statusBg);
             SetRef(view, "resumeButton", resumeButton);
+            SetRef(view, "pausedRestartButton", restartButton);
+            SetRef(view, "pausedMenuButton", menuButton);
             return view;
         }
 

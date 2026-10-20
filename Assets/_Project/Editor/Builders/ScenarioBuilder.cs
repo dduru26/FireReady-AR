@@ -1,4 +1,5 @@
 using System;
+using FireReady.Audio;
 using FireReady.Core;
 using FireReady.Simulation;
 using TMPro;
@@ -28,6 +29,9 @@ namespace FireReady.EditorTools
 
         static Material s_Flame, s_Smoke, s_Spray, s_Red, s_Black, s_Pin, s_Rack, s_Zone;
         static ExtinguisherDefinition[] s_Defs;
+        static AudioCueSet s_Audio;
+        public const string AudioCuesPath = "Assets/_Project/ScriptableObjects/Audio/AudioCueSet.asset";
+        const string AudioDir = "Assets/_Project/Audio/Cues";
 
         public struct Result
         {
@@ -56,12 +60,13 @@ namespace FireReady.EditorTools
             s_Rack = Lit(MatDir + "/Rack.mat", Hex(0x3A4048), 0.2f, 0.3f);
             s_Zone = AssetDatabase.LoadAssetAtPath<Material>(MatDir + "/TrainingZone.mat");
 
+            s_Audio = BuildAudioCues();
             BuildS1();
             BuildS2();
             BuildS3();
             var catalog = BuildCatalog();
             AssetDatabase.SaveAssets();
-            AddressablesSetup.Configure(catalog, s_Defs);
+            AddressablesSetup.Configure(catalog, s_Defs, s_Audio);
             return new Result { Catalog = catalog, Steam = steam, Splash = splash };
         }
 
@@ -196,8 +201,32 @@ namespace FireReady.EditorTools
             return fire;
         }
 
+        static AudioCueSet BuildAudioCues()
+        {
+            AudioClip Clip(string name) => AssetDatabase.LoadAssetAtPath<AudioClip>($"{AudioDir}/{name}.wav");
+            var set = LoadOrCreate(AudioCuesPath, () => ScriptableObject.CreateInstance<AudioCueSet>());
+            set.fireLoop = Clip("FireLoop");
+            set.sprayLoop = Clip("SprayLoop");
+            set.alarmLoop = Clip("AlarmLoop");
+            set.warning = Clip("Warning");
+            set.success = Clip("Success");
+            set.flareUp = Clip("FlareUp");
+            set.pinClick = Clip("PinClick");
+            set.pickUp = Clip("PickUp");
+            set.shock = Clip("Shock");
+            EditorUtility.SetDirty(set);
+            return set;
+        }
+
         static void Save(GameObject root, string path)
         {
+            // The scenario carries its own sounds, so they load and unload with it.
+            var fire = root.GetComponentInChildren<FireHazard>();
+            var audio = root.AddComponent<ScenarioAudio>();
+            SetRef(audio, "cues", s_Audio);
+            if (fire != null)
+                SetRef(audio, "fireSource", fire.transform.Find("Flame Base"));
+
             PrefabUtility.SaveAsPrefabAsset(root, path);
             UnityEngine.Object.DestroyImmediate(root);
         }

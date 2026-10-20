@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FireReady.Audio;
 using FireReady.Core;
 using FireReady.Simulation;
 using UnityEditor;
@@ -19,7 +20,7 @@ namespace FireReady.EditorTools
         const string MatDir = "Assets/_Project/Art/Materials";
         const string TexDir = "Assets/_Project/Art/Textures";
 
-        public static void Configure(ScenarioCatalog catalog, ExtinguisherDefinition[] extinguishers)
+        public static void Configure(ScenarioCatalog catalog, ExtinguisherDefinition[] extinguishers, AudioCueSet audio)
         {
             var settings = AddressableAssetSettingsDefaultObject.GetSettings(true);
 
@@ -54,6 +55,13 @@ namespace FireReady.EditorTools
                      })
                 Add(settings, shared, $"{MatDir}/{mat}.mat", $"shared/material/{mat}");
             Add(settings, shared, $"{TexDir}/SoftParticle.png", "shared/texture/SoftParticle");
+            if (audio != null)
+                Add(settings, shared, AssetDatabase.GetAssetPath(audio), "shared/audio/cues");
+            foreach (var guid in AssetDatabase.FindAssets("t:AudioClip", new[] { "Assets/_Project/Audio/Cues" }))
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                Add(settings, shared, path, "shared/audio/" + System.IO.Path.GetFileNameWithoutExtension(path));
+            }
             Add(settings, shared, $"{TexDir}/TrainingZone.png", "shared/texture/TrainingZone");
 
             settings.SetDirty(AddressableAssetSettings.ModificationEvent.BatchModification, null, true, true);

@@ -4,6 +4,7 @@ using FireReady.AR;
 using FireReady.Simulation;
 using FireReady.Training;
 using FireReady.Data;
+using FireReady.Audio;
 using FireReady.UI;
 using Unity.XR.CoreUtils;
 using UnityEditor;
@@ -194,6 +195,7 @@ namespace FireReady.EditorTools
             // Scenario content arrives through Addressables at runtime, so the scene must not reference it.
             SetRef(placement, "scenePrefab", null);
             var loader = GetOrAdd<ScenarioLoader>(systems);
+            var audioManager = GetOrAdd<AudioManager>(systems);
 
             var scenarioController = GetOrAdd<ScenarioController>(systems);
             var extinguishers = GetOrAdd<ExtinguisherController>(systems);
@@ -230,6 +232,7 @@ namespace FireReady.EditorTools
             SetRef(bootstrapper, "extinguishers", extinguishers);
             SetRef(bootstrapper, "guidedSteps", steps);
             SetRef(bootstrapper, "scenarioLoader", loader);
+            SetRef(bootstrapper, "audioManager", audioManager);
             SetRef(bootstrapper, "sessionRecorder", recorder);
             SetRef(bootstrapper, "sessionArchiver", archiver);
             SetRef(bootstrapper, "debrief", menus.Debrief);

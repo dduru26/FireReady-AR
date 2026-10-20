@@ -20,6 +20,31 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0bb85eba4930d4d85b802cf17659dfe8
+    m_Address: shared/audio/Shock
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 12534945173f34f2192d4666fac76843
+    m_Address: shared/audio/SprayLoop
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 17c8d6c27300344d483c6f2dcb7c547e
+    m_Address: shared/audio/PinClick
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 19c9ee69a46204730a9e0711040594ea
+    m_Address: shared/audio/FireLoop
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 20bf1125fe1774598a0f689ed54e7f1c
+    m_Address: shared/audio/FlareUp
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 29c6c943cfeee4f648863d751b822dd5
     m_Address: shared/texture/SoftParticle
     m_ReadOnly: 0
@@ -27,6 +52,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 388e612964ad8449d8fb3a4abd2c4472
     m_Address: shared/material/Extinguisher_Red
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3d3ef173d2f2845979c03ac78b09eab0
+    m_Address: shared/audio/AlarmLoop
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -55,6 +85,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 57cbd9b26e5734184933ebc147de851d
+    m_Address: shared/audio/Success
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 63d5315b7bdbb4db2a17c987fb12df4c
     m_Address: shared/material/FX_Flame
     m_ReadOnly: 0
@@ -80,6 +115,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8332cf54065ea4371a3c25c209a0e32f
+    m_Address: shared/audio/PickUp
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 83ee62f135e03409993e2905726fea30
     m_Address: shared/texture/TrainingZone
     m_ReadOnly: 0
@@ -95,6 +135,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 962d1829e0ecb4106a3df8fac2ef0de8
+    m_Address: shared/audio/cues
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bfcacabe545b44239bc78be532838930
     m_Address: shared/material/FX_Spray
     m_ReadOnly: 0
@@ -107,6 +152,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e5839eda1966b4e9e8f8bf318b582a1d
     m_Address: shared/material/Band_Water
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e584c891668d0461e8fa3a9fb249e17b
+    m_Address: shared/audio/Warning
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
