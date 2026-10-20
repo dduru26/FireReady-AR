@@ -6,16 +6,15 @@ using UnityEngine.UI;
 namespace FireReady.UI
 {
     /// <summary>
-    /// The in-simulation HUD (design screens 8, 9 and 11): fire intensity, the guided
+    /// The in-simulation HUD (design screens 8 and 9): fire intensity, the guided
     /// step, distance/aim/sweep chips, the held extinguisher, Alarm, hold-to-Squeeze,
-    /// Evacuate, mistake warnings and the completion card. It reads only events and
+    /// Evacuate and mistake warnings. It reads only events and
     /// publishes the trainee's commands back to the EventBus.
     /// </summary>
     public sealed class SimulationHudView : MonoBehaviour
     {
         [Header("Roots")]
         [SerializeField] GameObject hudRoot;
-        [SerializeField] GameObject completionCard;
 
         [Header("Top bar")]
         [SerializeField] TMP_Text scenarioTitle;
@@ -72,11 +71,6 @@ namespace FireReady.UI
         [SerializeField] HoldButton squeezeButton;
         [SerializeField] Button evacuateButton;
 
-        [Header("Completion")]
-        [SerializeField] TMP_Text completionTitle;
-        [SerializeField] TMP_Text completionBody;
-        [SerializeField] TMP_Text completionMeta;
-        [SerializeField] Button restartButton;
 
         static readonly Color Green = UiPalette.Safe;
         static readonly Color Yellow = UiPalette.Warning;
@@ -103,11 +97,9 @@ namespace FireReady.UI
             evacuateButton.onClick.AddListener(() => EventBus.Publish(new EvacuateRequested()));
             pullPinButton.onClick.AddListener(() => EventBus.Publish(new PullPinRequested()));
             putBackButton.onClick.AddListener(() => EventBus.Publish(new ReturnExtinguisherRequested()));
-            restartButton.onClick.AddListener(() => EventBus.Publish(new RestartRequested()));
             squeezeButton.HeldChanged += held => EventBus.Publish(new SqueezeChanged(held));
 
             hudRoot.SetActive(false);
-            completionCard.SetActive(false);
             warningCard.SetActive(false);
             ShowEmptyHand();
             SetChipsUnknown();
@@ -372,42 +364,13 @@ namespace FireReady.UI
             EventBus.Publish(new AlarmRaised());
         }
 
-        // ---- Completion ----------------------------------------------------------------
+        // ---- End ------------------------------------------------------------------------
 
         void OnSessionEnded(SessionEnded e)
         {
+            // The debrief screen takes over once the session is scored.
             hudRoot.SetActive(false);
-            completionCard.SetActive(true);
             squeezeButton.Release();
-
-            switch (e.Outcome)
-            {
-                case SessionOutcome.Extinguished:
-                    completionTitle.text = "Fire extinguished";
-                    completionBody.text = "You put the fire out.";
-                    break;
-                case SessionOutcome.EvacuatedCorrectly:
-                    completionTitle.text = "You evacuated";
-                    completionBody.text = "Right call: the fire was too big for a portable extinguisher.";
-                    break;
-                case SessionOutcome.EvacuatedEarly:
-                    completionTitle.text = "You evacuated early";
-                    completionBody.text = "The fire was still small enough to tackle with the right extinguisher.";
-                    break;
-                case SessionOutcome.OutOfControl:
-                    completionTitle.text = "The fire got out of control";
-                    completionBody.text = "Once it passes the evacuate line, raise the alarm and get out.";
-                    break;
-                case SessionOutcome.Injured:
-                    completionTitle.text = "You were injured";
-                    completionBody.text = "Water on live electrical equipment can give a fatal shock. Use CO2.";
-                    break;
-                default:
-                    completionTitle.text = "Session ended";
-                    completionBody.text = string.Empty;
-                    break;
-            }
-            completionMeta.text = $"{m_Title} · Guided · {FormatTime(Mathf.FloorToInt(e.Duration))}";
         }
 
         static string FormatTime(int seconds) => $"{seconds / 60:00}:{seconds % 60:00}";

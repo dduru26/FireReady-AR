@@ -1,0 +1,14 @@
+{
+    "name": "FireReady.Data",
+    "rootNamespace": "FireReady.Data",
+    "references": ["FireReady.Core"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

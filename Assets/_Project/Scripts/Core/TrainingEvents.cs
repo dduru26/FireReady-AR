@@ -164,3 +164,50 @@ namespace FireReady.Core
         }
     }
 }
+
+namespace FireReady.Core
+{
+    /// <summary>The session has been scored (FR-26, FR-27).</summary>
+    public readonly struct SessionScored : IGameEvent
+    {
+        public readonly string Title;
+        public readonly FireClass FireClass;
+        public readonly string Mode;
+        public readonly SessionOutcome Outcome;
+        public readonly float Duration;
+        public readonly int Total;
+        public readonly int Max;
+        public readonly ScoreLine[] Lines;
+        public readonly string[] Mistakes;
+
+        public SessionScored(string title, FireClass fireClass, string mode, SessionOutcome outcome, float duration,
+            int total, int max, ScoreLine[] lines, string[] mistakes)
+        {
+            Title = title;
+            FireClass = fireClass;
+            Mode = mode;
+            Outcome = outcome;
+            Duration = duration;
+            Total = total;
+            Max = max;
+            Lines = lines;
+            Mistakes = mistakes;
+        }
+    }
+
+    /// <summary>The scored session was written to storage (FR-28).</summary>
+    public readonly struct SessionSaved : IGameEvent
+    {
+        public readonly bool IsNewBest;
+        public readonly int SavedCount;
+
+        public SessionSaved(bool isNewBest, int savedCount)
+        {
+            IsNewBest = isNewBest;
+            SavedCount = savedCount;
+        }
+    }
+
+    public readonly struct HistoryRequested : IGameEvent { }
+    public readonly struct MainMenuRequested : IGameEvent { }
+}

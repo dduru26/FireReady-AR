@@ -33,8 +33,18 @@ namespace FireReady.AR
             return n;
         }
 
+        bool m_Hidden;
+
+        void OnEnable() => EventBus.Subscribe<SimulationStateChanged>(OnStateChanged);
+        void OnDisable() => EventBus.Unsubscribe<SimulationStateChanged>(OnStateChanged);
+
+        // Keep the readout off the full-screen debrief and history screens.
+        void OnStateChanged(SimulationStateChanged e) => m_Hidden = e.Current == SimulationStateId.Completed;
+
         void OnGUI()
         {
+            if (m_Hidden)
+                return;
             if (style == null)
             {
                 style = new GUIStyle(GUI.skin.label)
