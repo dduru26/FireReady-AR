@@ -1,7 +1,10 @@
 using FireReady.AR;
+using FireReady.Core;
 using FireReady.Simulation;
+using FireReady.Training;
 using FireReady.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.XR.ARFoundation;
 
 namespace FireReady.App
@@ -27,9 +30,13 @@ namespace FireReady.App
         [SerializeField] PlaneVisibilityController planeVisibility;
         [SerializeField] TrackingMonitor trackingMonitor;
         [SerializeField] ScreenTapDetector tapDetector;
+        [SerializeField] ScenarioController scenario;
+        [SerializeField] ExtinguisherController extinguishers;
+        [SerializeField] GuidedStepTracker guidedSteps;
 
         [Header("UI")]
         [SerializeField] SetupHudView setupHud;
+        [SerializeField] SimulationHudView simulationHud;
 
         void Awake()
         {
@@ -42,10 +49,21 @@ namespace FireReady.App
             placement.Construct(raycastManager, planeManager, anchorManager, arCamera, tapDetector);
             planeVisibility.Construct(planeManager);
             trackingMonitor.Construct(arSession);
+            extinguishers.Construct(arCamera);
+            scenario.Construct(extinguishers, simulation);
             simulation.Construct();
         }
 
         void Start() => simulation.Begin();
+
+        void OnEnable() => EventBus.Subscribe<RestartRequested>(OnRestart);
+        void OnDisable() => EventBus.Unsubscribe<RestartRequested>(OnRestart);
+
+        void OnRestart(RestartRequested e)
+        {
+            // Reloading the scene gives a clean session; the AR session restarts with it.
+            SceneManager.LoadScene(gameObject.scene.buildIndex);
+        }
 
         bool Validate()
         {
@@ -60,7 +78,11 @@ namespace FireReady.App
             ok &= Check(planeVisibility, nameof(planeVisibility));
             ok &= Check(trackingMonitor, nameof(trackingMonitor));
             ok &= Check(tapDetector, nameof(tapDetector));
+            ok &= Check(scenario, nameof(scenario));
+            ok &= Check(extinguishers, nameof(extinguishers));
+            ok &= Check(guidedSteps, nameof(guidedSteps));
             ok &= Check(setupHud, nameof(setupHud));
+            ok &= Check(simulationHud, nameof(simulationHud));
             return ok;
         }
 

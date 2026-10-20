@@ -2,6 +2,7 @@ using System;
 using FireReady.App;
 using FireReady.AR;
 using FireReady.Simulation;
+using FireReady.Training;
 using FireReady.UI;
 using Unity.XR.CoreUtils;
 using UnityEditor;
@@ -47,11 +48,12 @@ namespace FireReady.EditorTools
                 var binMat = LitMaterial(BinMat, Hex(0x5B6470));
                 var settings = LoadOrCreate(SettingsPath, () => ScriptableObject.CreateInstance<PlacementSettings>());
                 var reticle = BuildReticlePrefab(reticleMat);
-                var scene = BuildScenePrefab(zoneMat, binMat);
+                BuildScenePrefab(zoneMat, binMat);
+                var scenario = ScenarioBuilder.Build();
                 AssetDatabase.SaveAssets();
-                Log("AR setup assets ok");
+                Log("AR setup and S1 scenario assets ok");
 
-                WireScene(settings, reticle, scene);
+                WireScene(settings, reticle, scenario);
                 Log("AR SETUP DONE");
             }
             catch (Exception e)
@@ -160,7 +162,7 @@ namespace FireReady.EditorTools
 
         // ---- Scene -----------------------------------------------------------
 
-        static void WireScene(PlacementSettings settings, PlacementReticle reticle, GameObject scenePrefab)
+        static void WireScene(PlacementSettings settings, PlacementReticle reticle, ScenarioBuilder.Result scenario)
         {
             var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
 
@@ -188,10 +190,20 @@ namespace FireReady.EditorTools
 
             SetRef(placement, "settings", settings);
             SetRef(placement, "reticlePrefab", reticle);
-            SetRef(placement, "scenePrefab", scenePrefab);
+            SetRef(placement, "scenePrefab", scenario.Scenario);
+
+            var scenarioController = GetOrAdd<ScenarioController>(systems);
+            var extinguishers = GetOrAdd<ExtinguisherController>(systems);
+            var steps = GetOrAdd<GuidedStepTracker>(systems);
+            var steamPool = Pool(systems.transform, "Steam Pool", scenario.Steam, "Steam pool");
+            var splashPool = Pool(systems.transform, "Splash Pool", scenario.Splash, "Splash pool");
+            SetRef(extinguishers, "steamPool", steamPool);
+            SetRef(extinguishers, "splashPool", splashPool);
 
             EnsureEventSystem();
-            var hud = SetupHudBuilder.Build(AssetDatabase.LoadAssetAtPath<Sprite>(RoundedSprite));
+            var rounded = AssetDatabase.LoadAssetAtPath<Sprite>(RoundedSprite);
+            var hud = SetupHudBuilder.Build(rounded);
+            var simHud = SimulationHudBuilder.Build(rounded);
 
             SetRef(bootstrapper, "arSession", session);
             SetRef(bootstrapper, "raycastManager", raycasts);
@@ -204,10 +216,27 @@ namespace FireReady.EditorTools
             SetRef(bootstrapper, "trackingMonitor", tracking);
             SetRef(bootstrapper, "tapDetector", taps);
             SetRef(bootstrapper, "setupHud", hud);
+            SetRef(bootstrapper, "simulationHud", simHud);
+            SetRef(bootstrapper, "scenario", scenarioController);
+            SetRef(bootstrapper, "extinguishers", extinguishers);
+            SetRef(bootstrapper, "guidedSteps", steps);
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             Log("scene wired: Systems + Setup HUD");
+        }
+
+        static EffectPool Pool(Transform parent, string name, PooledEffect prefab, string label)
+        {
+            var existing = parent.Find(name);
+            var go = existing != null ? existing.gameObject : new GameObject(name);
+            go.transform.SetParent(parent, false);
+            var pool = GetOrAdd<EffectPool>(go);
+            SetRef(pool, "prefab", prefab);
+            var so = new SerializedObject(pool);
+            so.FindProperty("statsLabel").stringValue = label;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            return pool;
         }
 
         static void EnsureEventSystem()

@@ -84,8 +84,10 @@ namespace FireReady.UI
                     SetStatus("Scene anchored to the floor", UiPalette.Safe);
                     break;
                 case SimulationStateId.Running:
-                    ShowOnly(runningCard);
-                    SetStatus("Training scene ready", UiPalette.Panel);
+                case SimulationStateId.Completed:
+                    // The simulation HUD takes over from here.
+                    ShowOnly(null);
+                    SetStatus(null, default);
                     break;
                 case SimulationStateId.Paused:
                     ShowOnly(pausedOverlay);

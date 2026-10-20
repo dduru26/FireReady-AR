@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 464187cdf3bf3477a85f96b31e71052f, type: 3}
+  m_Name: WetChemical
+  m_EditorClassIdentifier: FireReady.Simulation::FireReady.Simulation.ExtinguisherDefinition
+  agent: 4
+  displayName: Wet chemical
+  bandColor: {r: 0.9607843, g: 0.77254903, b: 0.09411765, a: 1}
+  capacitySeconds: 10
+  sprayColor: {r: 1, g: 1, b: 0.9, a: 0.8}
+  impactColor: {r: 1, g: 1, b: 0.9, a: 0.65}

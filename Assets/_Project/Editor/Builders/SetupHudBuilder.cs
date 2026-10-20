@@ -14,9 +14,9 @@ namespace FireReady.EditorTools
     internal static class SetupHudBuilder
     {
         const string CanvasName = "Setup HUD";
-        const float Pt = 3f;
+        internal const float Pt = 3f;
 
-        static Sprite s_Rounded;
+        internal static Sprite s_Rounded;
 
         static readonly Color Panel = Hex(0x0E1116, 0.86f);
         static readonly Color Dialog = Hex(0x171B21);
@@ -95,11 +95,6 @@ namespace FireReady.EditorTools
             var moveButton = Pill(row, "Move Button", "Move", new Color(1f, 1f, 1f, 0.14f), TextColor, 54);
             var confirmButton = Pill(row, "Confirm Button", "Confirm", Blue, Color.white, 54);
 
-            // Running (temporary until the simulation HUD is built)
-            var running = BottomCard(safe, "Running Card");
-            Label(running, "Title", "Training scene placed", 22, TextColor, FontStyles.Bold);
-            Label(running, "Body", "The fire scenario loads here in the next build step. Double-tap the floor to move the scene.", 16, TextSecondary, FontStyles.Normal);
-
             // Paused overlay (full screen, blocks taps on the scene)
             var paused = Node("Paused Overlay", canvasGo.transform);
             Stretch(paused);
@@ -134,7 +129,6 @@ namespace FireReady.EditorTools
             SetRef(view, "scanCard", scan.gameObject);
             SetRef(view, "placeCard", place.gameObject);
             SetRef(view, "confirmCard", confirm.gameObject);
-            SetRef(view, "runningCard", running.gameObject);
             SetRef(view, "pausedOverlay", paused.gameObject);
             SetRef(view, "areaLabel", area);
             SetRef(view, "placeButton", placeButton);
@@ -148,21 +142,21 @@ namespace FireReady.EditorTools
 
         // ---- Helpers ---------------------------------------------------------
 
-        static RectTransform Node(string name, Transform parent)
+        internal static RectTransform Node(string name, Transform parent)
         {
             var go = new GameObject(name, typeof(RectTransform)) { layer = 5 };
             go.transform.SetParent(parent, false);
             return (RectTransform)go.transform;
         }
 
-        static void Stretch(RectTransform rt)
+        internal static void Stretch(RectTransform rt)
         {
             rt.anchorMin = Vector2.zero;
             rt.anchorMax = Vector2.one;
             rt.offsetMin = rt.offsetMax = Vector2.zero;
         }
 
-        static Image Rounded(RectTransform rt, Color color, float radius)
+        internal static Image Rounded(RectTransform rt, Color color, float radius)
         {
             var image = rt.gameObject.AddComponent<Image>();
             image.sprite = s_Rounded;
@@ -172,7 +166,7 @@ namespace FireReady.EditorTools
             return image;
         }
 
-        static RectTransform BottomCard(RectTransform safe, string name)
+        internal static RectTransform BottomCard(RectTransform safe, string name)
         {
             var card = Node(name, safe);
             card.anchorMin = new Vector2(0f, 0f);
@@ -192,7 +186,7 @@ namespace FireReady.EditorTools
             return card;
         }
 
-        static TextMeshProUGUI Label(Transform parent, string name, string text, float sizePt, Color color, FontStyles style)
+        internal static TextMeshProUGUI Label(Transform parent, string name, string text, float sizePt, Color color, FontStyles style)
         {
             var rt = Node(name, parent);
             var tmp = rt.gameObject.AddComponent<TextMeshProUGUI>();
@@ -208,7 +202,7 @@ namespace FireReady.EditorTools
             return tmp;
         }
 
-        static Button Pill(Transform parent, string name, string text, Color background, Color textColor, float heightPt)
+        internal static Button Pill(Transform parent, string name, string text, Color background, Color textColor, float heightPt)
         {
             var rt = Node(name, parent);
             var image = Rounded(rt, background, heightPt * Pt * 0.5f);

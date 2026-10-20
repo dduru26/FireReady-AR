@@ -6,6 +6,7 @@
         "FireReady.AR",
         "FireReady.Simulation",
         "FireReady.UI",
+        "FireReady.Training",
         "Unity.XR.ARFoundation"
     ],
     "includePlatforms": [],
