@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Scenario S3 Power strip
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Scenario S3 Power strip
+  m_GUID: d187b2cb28a8340178ecea637edac10f
+  m_SerializeEntries:
+  - m_GUID: d5c0e2410a1f94b3aab9935886e6fd03
+    m_Address: scenario/s3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 29d38769407ea492f89499e4692e46c4, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 79d67fc98a6e84fce8156bdcf19db9f6, type: 2}
+    - {fileID: 11400000, guid: 9c5b207237a1148acae810ae9de19466, type: 2}
+    m_SchemaDisplayOrder:
+    - Scenario S3 Power strip_BundledAssetGroupSchema
+    - Scenario S3 Power strip_ContentUpdateGroupSchema
+  m_IncludeInBuild: 1
+  m_IncludeInBuildMigrated: 1

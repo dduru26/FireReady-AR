@@ -55,7 +55,7 @@ MonoBehaviour:
   m_CheckForContentUpdateRestrictionsOption: 0
   m_MonoScriptBundleCustomNaming: 
   m_RemoteCatalogBuildPath:
-    m_Id: 
+    m_Id: e536fcac8bae84329a7535f94fff4f61
   m_RemoteCatalogLoadPath:
     m_Id: 
   m_ContentStateBuildPathProfileVariableName: 
@@ -64,7 +64,11 @@ MonoBehaviour:
   m_BuildAddressablesWithPlayerBuild: 1
   m_overridePlayerVersion: '[UnityEditor.PlayerSettings.bundleVersion]'
   m_GroupAssets:
+  - {fileID: 11400000, guid: 21b3323ec1f8b490b82325d118ab4b41, type: 2}
   - {fileID: 11400000, guid: bd35a89aa04044150b91bfe12166adf8, type: 2}
+  - {fileID: 11400000, guid: 01c56a6949c694c1b9187b467c789eff, type: 2}
+  - {fileID: 11400000, guid: e70777b93526441bca3ffde3b5b815e8, type: 2}
+  - {fileID: 11400000, guid: 0c8fee6d4fdcf4bbca1149bdbd221de2, type: 2}
   m_BuildSettings:
     m_LogResourceManagerExceptions: 1
     m_BundleBuildPath: Temp/com.unity.addressables/AssetBundles

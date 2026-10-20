@@ -1,0 +1,128 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Shared Training Assets
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Shared Training Assets
+  m_GUID: adc42e918062440e8afef7593399ab62
+  m_SerializeEntries:
+  - m_GUID: 022527ec257c443049702c83a5c07e77
+    m_Address: shared/extinguisher/DryPowder
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 29c6c943cfeee4f648863d751b822dd5
+    m_Address: shared/texture/SoftParticle
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 388e612964ad8449d8fb3a4abd2c4472
+    m_Address: shared/material/Extinguisher_Red
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4592820b5fd374d938b2ebb19623dd9a
+    m_Address: shared/material/Band_Foam
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4ce63ed958c9d4350b08f6d73142d56a
+    m_Address: shared/extinguisher/CO2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 50bdce9e87459409a82734892097bdf7
+    m_Address: shared/material/Rack
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 50e7da16685ba4ca0b2c970ef885edfe
+    m_Address: shared/material/Extinguisher_Black
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 52de525ffd4464bb4a3687a6089e8caa
+    m_Address: shared/extinguisher/Foam
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 63d5315b7bdbb4db2a17c987fb12df4c
+    m_Address: shared/material/FX_Flame
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6a1a50d406c734a1b933eed126b9cb10
+    m_Address: shared/extinguisher/WetChemical
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7856ca5eec7f444fbb6eb647a9c68d91
+    m_Address: shared/material/Band_CO2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 78ba2e782a1df43a58cda4d82748ba79
+    m_Address: shared/material/FX_Smoke
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8167642b7ea50430ca53e1f096a08d72
+    m_Address: shared/material/TrainingZone
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 83ee62f135e03409993e2905726fea30
+    m_Address: shared/texture/TrainingZone
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8d947c46dd328410881bf72ce3b2b8fd
+    m_Address: shared/material/Band_DryPowder
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 92f76523a087c4351862291d5c27c431
+    m_Address: shared/material/Extinguisher_Pin
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bfcacabe545b44239bc78be532838930
+    m_Address: shared/material/FX_Spray
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e0e36bdf201774e0898b1fd02c629596
+    m_Address: shared/extinguisher/Water
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e5839eda1966b4e9e8f8bf318b582a1d
+    m_Address: shared/material/Band_Water
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: edd9290071331430ebe05b73d2b45109
+    m_Address: shared/material/Band_WetChemical
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 29d38769407ea492f89499e4692e46c4, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 1ce56267c683b40d4a3f65e1cb52672c, type: 2}
+    - {fileID: 11400000, guid: 7989f9066febd4b1da311ebaba7bac9e, type: 2}
+    m_SchemaDisplayOrder:
+    - Shared Training Assets_BundledAssetGroupSchema
+    - Shared Training Assets_ContentUpdateGroupSchema
+  m_IncludeInBuild: 1
+  m_IncludeInBuildMigrated: 1

@@ -21,10 +21,17 @@ namespace FireReady.EditorTools
         const string DefDir = "Assets/_Project/ScriptableObjects/Extinguishers";
         const string EffectsDir = "Assets/_Project/Prefabs/Effects";
         public const string S1Prefab = "Assets/_Project/Prefabs/Scenario/S1_OfficeBin.prefab";
+        public const string S2Prefab = "Assets/_Project/Prefabs/Scenario/S2_KitchenPan.prefab";
+        public const string S3Prefab = "Assets/_Project/Prefabs/Scenario/S3_PowerStrip.prefab";
+        const string ScenarioDefDir = "Assets/_Project/ScriptableObjects/Scenarios";
+        public const string CatalogPath = ScenarioDefDir + "/ScenarioCatalog.asset";
+
+        static Material s_Flame, s_Smoke, s_Spray, s_Red, s_Black, s_Pin, s_Rack, s_Zone;
+        static ExtinguisherDefinition[] s_Defs;
 
         public struct Result
         {
-            public GameObject Scenario;
+            public ScenarioCatalog Catalog;
             public PooledEffect Steam;
             public PooledEffect Splash;
         }
@@ -36,13 +43,26 @@ namespace FireReady.EditorTools
             var smokeMat = ParticleFactory.Material(MatDir + "/FX_Smoke.mat", soft, additive: false);
             var sprayMat = ParticleFactory.Material(MatDir + "/FX_Spray.mat", soft, additive: false);
 
-            var defs = BuildDefinitions();
+            s_Defs = BuildDefinitions();
             var steam = BuildPuff("SteamPuff", sprayMat, rise: 0.25f);
             var splash = BuildPuff("SplashPuff", sprayMat, rise: -0.4f);
 
-            var scenario = BuildS1(defs, flameMat, smokeMat, sprayMat);
+            s_Flame = flameMat;
+            s_Smoke = smokeMat;
+            s_Spray = sprayMat;
+            s_Red = Lit(MatDir + "/Extinguisher_Red.mat", Hex(0xC8211B), 0.1f, 0.65f);
+            s_Black = Lit(MatDir + "/Extinguisher_Black.mat", Hex(0x15181C), 0.2f, 0.5f);
+            s_Pin = Lit(MatDir + "/Extinguisher_Pin.mat", Hex(0xF5C518), 0.6f, 0.6f);
+            s_Rack = Lit(MatDir + "/Rack.mat", Hex(0x3A4048), 0.2f, 0.3f);
+            s_Zone = AssetDatabase.LoadAssetAtPath<Material>(MatDir + "/TrainingZone.mat");
+
+            BuildS1();
+            BuildS2();
+            BuildS3();
+            var catalog = BuildCatalog();
             AssetDatabase.SaveAssets();
-            return new Result { Scenario = scenario, Steam = steam, Splash = splash };
+            AddressablesSetup.Configure(catalog, s_Defs);
+            return new Result { Catalog = catalog, Steam = steam, Splash = splash };
         }
 
         static Texture2D ImportSoftTexture()
@@ -106,21 +126,14 @@ namespace FireReady.EditorTools
 
         // ---- Scenario --------------------------------------------------------------------
 
-        static GameObject BuildS1(ExtinguisherDefinition[] defs, Material flameMat, Material smokeMat, Material sprayMat)
+        static Transform NewScenario(string title, out GameObject root)
         {
-            var zoneMat = AssetDatabase.LoadAssetAtPath<Material>(MatDir + "/TrainingZone.mat");
-            var metal = Lit(MatDir + "/Bin_Metal.mat", Hex(0x2B3036), 0.55f, 0.6f);
-            var black = Lit(MatDir + "/Extinguisher_Black.mat", Hex(0x15181C), 0.2f, 0.5f);
-            var red = Lit(MatDir + "/Extinguisher_Red.mat", Hex(0xC8211B), 0.1f, 0.65f);
-            var pinMat = Lit(MatDir + "/Extinguisher_Pin.mat", Hex(0xF5C518), 0.6f, 0.6f);
-            var rackMat = Lit(MatDir + "/Rack.mat", Hex(0x3A4048), 0.2f, 0.3f);
-
             // +Z of the scene faces the trainee.
-            var root = new GameObject("S1 Office waste bin");
-            root.AddComponent<ScenarioInfo>();
-            SetString(root.GetComponent<ScenarioInfo>(), "title", "Office waste bin");
+            root = new GameObject(title);
+            var info = root.AddComponent<ScenarioInfo>();
+            SetString(info, "title", title);
 
-            if (zoneMat != null)
+            if (s_Zone != null)
             {
                 var zone = GameObject.CreatePrimitive(PrimitiveType.Quad);
                 zone.name = "Training Zone";
@@ -130,28 +143,41 @@ namespace FireReady.EditorTools
                 zone.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
                 zone.transform.localScale = Vector3.one * 2f;
                 var zr = zone.GetComponent<MeshRenderer>();
-                zr.sharedMaterial = zoneMat;
+                zr.sharedMaterial = s_Zone;
                 zr.shadowCastingMode = ShadowCastingMode.Off;
             }
 
-            // Bin with the fire on top.
-            var binRoot = new GameObject("Waste Bin").transform;
-            binRoot.SetParent(root.transform, false);
-            binRoot.localPosition = new Vector3(0.3f, 0f, -0.55f);
-            var bin = Primitive(PrimitiveType.Cylinder, "Bin", binRoot, new Vector3(0f, 0.2f, 0f), new Vector3(0.32f, 0.2f, 0.32f), metal);
-            Primitive(PrimitiveType.Cylinder, "Rim", binRoot, new Vector3(0f, 0.4f, 0f), new Vector3(0.34f, 0.008f, 0.34f), black);
+            // Rack on the trainee's right, in front of the hazard.
+            var rack = new GameObject("Extinguisher Rack").transform;
+            rack.SetParent(root.transform, false);
+            rack.localPosition = new Vector3(-0.45f, 0f, 0.05f);
+            Primitive(PrimitiveType.Cube, "Rack Base", rack, new Vector3(0f, 0.01f, 0f), new Vector3(0.95f, 0.02f, 0.26f), s_Rack, keepCollider: false);
+            for (int i = 0; i < s_Defs.Length; i++)
+            {
+                float x = (i - (s_Defs.Length - 1) * 0.5f) * 0.18f;
+                BuildExtinguisher(s_Defs[i], rack, new Vector3(x, 0.02f, 0f), s_Red, s_Black, s_Pin, s_Spray);
+            }
 
-            var fireGo = new GameObject("Fire (Class A)");
-            fireGo.transform.SetParent(binRoot, false);
+            var hazard = new GameObject("Hazard").transform;
+            hazard.SetParent(root.transform, false);
+            hazard.localPosition = new Vector3(0.3f, 0f, -0.6f);
+            return hazard;
+        }
+
+        static T AddFire<T>(Transform parent, float baseHeight, float baseRadius, float startIntensity, float growth)
+            where T : FireHazard
+        {
+            var fireGo = new GameObject($"Fire ({typeof(T).Name})");
+            fireGo.transform.SetParent(parent, false);
             var flameBase = new GameObject("Flame Base").transform;
             flameBase.SetParent(fireGo.transform, false);
-            flameBase.localPosition = new Vector3(0f, 0.38f, 0f);
+            flameBase.localPosition = new Vector3(0f, baseHeight, 0f);
 
-            var flames = ParticleFactory.Create("Flames", flameBase, Vector3.zero, flameMat);
+            var flames = ParticleFactory.Create("Flames", flameBase, Vector3.zero, s_Flame);
             ParticleFactory.Flames(flames);
-            var smoke = ParticleFactory.Create("Smoke", flameBase, new Vector3(0f, 0.25f, 0f), smokeMat);
+            var smoke = ParticleFactory.Create("Smoke", flameBase, new Vector3(0f, 0.25f, 0f), s_Smoke);
             ParticleFactory.Smoke(smoke);
-            var embers = ParticleFactory.Create("Embers", flameBase, Vector3.zero, flameMat);
+            var embers = ParticleFactory.Create("Embers", flameBase, Vector3.zero, s_Flame);
             ParticleFactory.Embers(embers);
 
             var visuals = fireGo.AddComponent<FireVisuals>();
@@ -159,25 +185,133 @@ namespace FireReady.EditorTools
             SetRef(visuals, "smoke", smoke);
             SetRef(visuals, "embers", embers);
 
-            var fire = fireGo.AddComponent<ClassAFire>();
+            var fire = fireGo.AddComponent<T>();
             SetRef(fire, "flameBase", flameBase);
             SetRef(fire, "visuals", visuals);
+            var so = new SerializedObject(fire);
+            so.FindProperty("baseRadius").floatValue = baseRadius;
+            so.FindProperty("startIntensity").floatValue = startIntensity;
+            so.FindProperty("baseGrowthPerSecond").floatValue = growth;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            return fire;
+        }
 
-            // Rack on the trainee's right, in front of the bin.
-            var rack = new GameObject("Extinguisher Rack").transform;
-            rack.SetParent(root.transform, false);
-            rack.localPosition = new Vector3(-0.45f, 0f, 0.05f);
-            Primitive(PrimitiveType.Cube, "Rack Base", rack, new Vector3(0f, 0.01f, 0f), new Vector3(0.95f, 0.02f, 0.26f), rackMat, keepCollider: false);
-
-            for (int i = 0; i < defs.Length; i++)
-            {
-                float x = (i - (defs.Length - 1) * 0.5f) * 0.18f;
-                BuildExtinguisher(defs[i], rack, new Vector3(x, 0.02f, 0f), red, black, pinMat, sprayMat);
-            }
-
-            var prefab = PrefabUtility.SaveAsPrefabAsset(root, S1Prefab);
+        static void Save(GameObject root, string path)
+        {
+            PrefabUtility.SaveAsPrefabAsset(root, path);
             UnityEngine.Object.DestroyImmediate(root);
-            return prefab;
+        }
+
+        static void BuildS1()
+        {
+            var metal = Lit(MatDir + "/Bin_Metal.mat", Hex(0x2B3036), 0.55f, 0.6f);
+            var hazard = NewScenario("S1 Office waste bin", out var root);
+            Primitive(PrimitiveType.Cylinder, "Bin", hazard, new Vector3(0f, 0.2f, 0f), new Vector3(0.32f, 0.2f, 0.32f), metal);
+            Primitive(PrimitiveType.Cylinder, "Rim", hazard, new Vector3(0f, 0.4f, 0f), new Vector3(0.34f, 0.008f, 0.34f), s_Black);
+            AddFire<ClassAFire>(hazard, 0.38f, 0.18f, 30f, 0.6f);
+            Save(root, S1Prefab);
+        }
+
+        static void BuildS2()
+        {
+            var cabinet = Lit(MatDir + "/Kitchen_Cabinet.mat", Hex(0xD9D6D0), 0.0f, 0.4f);
+            var hob = Lit(MatDir + "/Kitchen_Hob.mat", Hex(0x111315), 0.3f, 0.8f);
+            var pan = Lit(MatDir + "/Kitchen_Pan.mat", Hex(0x3A3D42), 0.7f, 0.6f);
+            var oil = Lit(MatDir + "/Kitchen_Oil.mat", Hex(0xC98A1B), 0.0f, 0.9f);
+
+            var hazard = NewScenario("S2 Kitchen pan", out var root);
+            Primitive(PrimitiveType.Cube, "Cooker", hazard, new Vector3(0f, 0.45f, 0f), new Vector3(0.6f, 0.9f, 0.55f), cabinet);
+            Primitive(PrimitiveType.Cube, "Hob", hazard, new Vector3(0f, 0.905f, 0f), new Vector3(0.56f, 0.01f, 0.5f), hob, keepCollider: false);
+            Primitive(PrimitiveType.Cylinder, "Pan", hazard, new Vector3(0f, 0.935f, 0f), new Vector3(0.3f, 0.025f, 0.3f), pan, keepCollider: false);
+            Primitive(PrimitiveType.Cube, "Pan Handle", hazard, new Vector3(0.24f, 0.945f, 0f), new Vector3(0.2f, 0.02f, 0.035f), s_Black, keepCollider: false);
+            Primitive(PrimitiveType.Cylinder, "Oil", hazard, new Vector3(0f, 0.957f, 0f), new Vector3(0.27f, 0.004f, 0.27f), oil, keepCollider: false);
+            AddFire<CookingOilFire>(hazard, 0.96f, 0.15f, 35f, 0.8f);
+            Save(root, S2Prefab);
+        }
+
+        static void BuildS3()
+        {
+            var wood = Lit(MatDir + "/Desk_Wood.mat", Hex(0x8A6A4A), 0.0f, 0.35f);
+            var plastic = Lit(MatDir + "/Plastic_White.mat", Hex(0xEDEDED), 0.0f, 0.5f);
+            var grey = Lit(MatDir + "/Wall_Grey.mat", Hex(0x9AA0A6), 0.0f, 0.3f);
+            var switchRed = Lit(MatDir + "/Switch_Red.mat", Hex(0xE53935), 0.0f, 0.6f);
+
+            var hazard = NewScenario("S3 Power strip", out var root);
+            Primitive(PrimitiveType.Cube, "Desk", hazard, new Vector3(0f, 0.37f, 0f), new Vector3(1.0f, 0.74f, 0.5f), wood);
+            Primitive(PrimitiveType.Cube, "Power Strip", hazard, new Vector3(0f, 0.76f, 0f), new Vector3(0.32f, 0.04f, 0.07f), plastic, keepCollider: false);
+            Primitive(PrimitiveType.Cube, "Plug 1", hazard, new Vector3(-0.08f, 0.79f, 0f), new Vector3(0.05f, 0.04f, 0.05f), s_Black, keepCollider: false);
+            Primitive(PrimitiveType.Cube, "Plug 2", hazard, new Vector3(0.04f, 0.79f, 0f), new Vector3(0.05f, 0.04f, 0.05f), s_Black, keepCollider: false);
+            Primitive(PrimitiveType.Cube, "Cable", hazard, new Vector3(0.36f, 0.76f, -0.1f), new Vector3(0.4f, 0.012f, 0.012f), s_Black, keepCollider: false);
+            var fire = AddFire<ElectricalFire>(hazard, 0.79f, 0.16f, 28f, 0.6f);
+
+            // Wall switch: tap it to cut the power before tackling the fire.
+            var wall = new GameObject("Wall Switch").transform;
+            wall.SetParent(hazard, false);
+            wall.localPosition = new Vector3(0.7f, 0f, -0.15f);
+            Primitive(PrimitiveType.Cube, "Post", wall, new Vector3(0f, 0.45f, 0f), new Vector3(0.06f, 0.9f, 0.06f), grey, keepCollider: false);
+            var panel = Primitive(PrimitiveType.Cube, "Panel", wall, new Vector3(0f, 0.95f, 0.04f), new Vector3(0.16f, 0.16f, 0.03f), plastic);
+            panel.GetComponent<BoxCollider>().size = new Vector3(2f, 2f, 3f); // easier to tap
+            var rocker = Primitive(PrimitiveType.Cube, "Rocker", panel.transform, new Vector3(0f, 0f, 0.8f), new Vector3(0.35f, 0.45f, 0.6f), switchRed, keepCollider: false);
+            var power = panel.AddComponent<PowerSwitch>();
+            SetRef(power, "fire", fire);
+            SetRef(power, "rocker", rocker.transform);
+            SetRef(power, "indicator", rocker.GetComponent<MeshRenderer>());
+
+            var labelGo = new GameObject("Label");
+            labelGo.transform.SetParent(wall, false);
+            labelGo.transform.localPosition = new Vector3(0f, 1.12f, 0f);
+            var label = labelGo.AddComponent<TextMeshPro>();
+            label.text = "POWER\n<size=70%>tap to switch off</size>";
+            label.fontSize = 0.5f;
+            label.fontStyle = FontStyles.Bold;
+            label.alignment = TextAlignmentOptions.Center;
+            label.color = Color.white;
+            label.outlineWidth = 0.2f;
+            label.outlineColor = new Color32(0, 0, 0, 200);
+            label.rectTransform.sizeDelta = new Vector2(0.7f, 0.2f);
+            labelGo.AddComponent<FaceCamera>();
+
+            Save(root, S3Prefab);
+        }
+
+        static ScenarioCatalog BuildCatalog()
+        {
+            var s1 = Scenario("S1_OfficeBin", 1, "Office waste bin", "Burning paper. The place to start.",
+                "A waste-paper bin has caught fire beside a desk. It is small now, but it grows every second you wait.",
+                FireClass.ClassA, "scenario/s1", "Preparing the office bin fire…",
+                new[] { "Waste bin and extinguisher rack", "Fire, smoke and spray effects", "Sounds and captions" });
+            var s2 = Scenario("S2_KitchenPan", 2, "Kitchen pan", "Burning cooking oil. Water makes it worse.",
+                "A pan of cooking oil has caught fire on the hob. Water makes burning oil erupt, so choose your extinguisher carefully.",
+                FireClass.ClassF, "scenario/s2", "Preparing the kitchen pan fire…",
+                new[] { "Cooker, pan and extinguisher rack", "Fire, smoke and spray effects", "Sounds and captions" });
+            var s3 = Scenario("S3_PowerStrip", 3, "Power strip", "Live electrical fire. Cut the power first.",
+                "An overloaded power strip on a desk is on fire and still live. Cut the power at the wall before you tackle it.",
+                FireClass.Electrical, "scenario/s3", "Preparing the power strip fire…",
+                new[] { "Desk, power strip and wall switch", "Fire, smoke and spray effects", "Sounds and captions" });
+
+            var catalog = LoadOrCreate(CatalogPath, () => ScriptableObject.CreateInstance<ScenarioCatalog>());
+            catalog.scenarios.Clear();
+            catalog.scenarios.Add(s1);
+            catalog.scenarios.Add(s2);
+            catalog.scenarios.Add(s3);
+            EditorUtility.SetDirty(catalog);
+            return catalog;
+        }
+
+        static ScenarioDefinition Scenario(string file, int number, string title, string tagline, string briefing,
+            FireClass fireClass, string address, string loadingTitle, string[] items)
+        {
+            var def = LoadOrCreate($"{ScenarioDefDir}/{file}.asset", () => ScriptableObject.CreateInstance<ScenarioDefinition>());
+            def.number = number;
+            def.title = title;
+            def.tagline = tagline;
+            def.briefing = briefing;
+            def.fireClass = fireClass;
+            def.address = address;
+            def.loadingTitle = loadingTitle;
+            def.loadingItems = items;
+            EditorUtility.SetDirty(def);
+            return def;
         }
 
         static void BuildExtinguisher(ExtinguisherDefinition def, Transform parent, Vector3 position,

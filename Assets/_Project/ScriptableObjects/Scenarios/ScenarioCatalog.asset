@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d568bf0e1bc44049993c0d74cec3417, type: 3}
+  m_Name: ScenarioCatalog
+  m_EditorClassIdentifier: FireReady.Core::FireReady.Core.ScenarioCatalog
+  scenarios:
+  - {fileID: 11400000, guid: 6c77af5fbc53740e4acabc20c8147b12, type: 2}
+  - {fileID: 11400000, guid: fae299cc9f6c6406ba6c7604884c4fef, type: 2}
+  - {fileID: 11400000, guid: c900b17e2c12e46e5bf5bc49908d90c9, type: 2}

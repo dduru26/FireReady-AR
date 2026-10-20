@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Scenario S1 Office bin
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Scenario S1 Office bin
+  m_GUID: 9b7e0b25e9d884a31b09844d0d1660cf
+  m_SerializeEntries:
+  - m_GUID: b5a61af5851444ff094b4ccefa9475f5
+    m_Address: scenario/s1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 29d38769407ea492f89499e4692e46c4, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: fa4253d3437d143fab96856b178be9b6, type: 2}
+    - {fileID: 11400000, guid: b861dd7df6e204c3da9efe52af9447b6, type: 2}
+    m_SchemaDisplayOrder:
+    - Scenario S1 Office bin_BundledAssetGroupSchema
+    - Scenario S1 Office bin_ContentUpdateGroupSchema
+  m_IncludeInBuild: 1
+  m_IncludeInBuildMigrated: 1

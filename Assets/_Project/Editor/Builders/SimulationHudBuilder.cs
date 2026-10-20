@@ -60,7 +60,8 @@ namespace FireReady.EditorTools
 
             var modePill = Node("Mode Pill", topBar);
             Place(modePill, new Vector2(1, 0), new Vector2(1, 1), Vector2.zero, new Vector2(88 * Pt, 0), new Vector2(1, 0.5f));
-            Rounded(modePill, GuidedBlue, 22 * Pt).raycastTarget = false;
+            var modeImage = Rounded(modePill, GuidedBlue, 22 * Pt);
+            modeImage.raycastTarget = false;
             var mode = Label(modePill, "Label", "Guided", 15, Color.white, FontStyles.Bold);
             Stretch(mode.rectTransform);
             mode.alignment = TextAlignmentOptions.Center;
@@ -206,6 +207,8 @@ namespace FireReady.EditorTools
             SetRef(view, "hudRoot", hud.gameObject);
             SetRef(view, "scenarioTitle", title);
             SetRef(view, "timerLabel", timer);
+            SetRef(view, "modePill", modeImage);
+            SetRef(view, "modeLabel", mode);
             SetRef(view, "trendBadge", badgeImage);
             SetRef(view, "trendLabel", badgeLabel);
             SetRef(view, "intensityValue", value);

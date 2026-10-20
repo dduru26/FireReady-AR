@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Scenario S2 Kitchen pan
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Scenario S2 Kitchen pan
+  m_GUID: 3662f9ad59f8f4db08ce3937c1a6ef6d
+  m_SerializeEntries:
+  - m_GUID: 03c94c25320fe4a0f99fac769b3b6fb6
+    m_Address: scenario/s2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 29d38769407ea492f89499e4692e46c4, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 69b62b95130774efdbb933971ebf32e4, type: 2}
+    - {fileID: 11400000, guid: 67dadea4e27bb49ecb170bc970593f5a, type: 2}
+    m_SchemaDisplayOrder:
+    - Scenario S2 Kitchen pan_BundledAssetGroupSchema
+    - Scenario S2 Kitchen pan_ContentUpdateGroupSchema
+  m_IncludeInBuild: 1
+  m_IncludeInBuildMigrated: 1

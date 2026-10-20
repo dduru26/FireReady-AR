@@ -191,7 +191,9 @@ namespace FireReady.EditorTools
 
             SetRef(placement, "settings", settings);
             SetRef(placement, "reticlePrefab", reticle);
-            SetRef(placement, "scenePrefab", scenario.Scenario);
+            // Scenario content arrives through Addressables at runtime, so the scene must not reference it.
+            SetRef(placement, "scenePrefab", null);
+            var loader = GetOrAdd<ScenarioLoader>(systems);
 
             var scenarioController = GetOrAdd<ScenarioController>(systems);
             var extinguishers = GetOrAdd<ExtinguisherController>(systems);
@@ -210,7 +212,7 @@ namespace FireReady.EditorTools
             var rounded = AssetDatabase.LoadAssetAtPath<Sprite>(RoundedSprite);
             var hud = SetupHudBuilder.Build(rounded);
             var simHud = SimulationHudBuilder.Build(rounded);
-            var menus = MenusBuilder.Build(rounded);
+            var menus = MenusBuilder.Build(rounded, scenario.Catalog);
 
             SetRef(bootstrapper, "arSession", session);
             SetRef(bootstrapper, "raycastManager", raycasts);
@@ -227,6 +229,7 @@ namespace FireReady.EditorTools
             SetRef(bootstrapper, "scenario", scenarioController);
             SetRef(bootstrapper, "extinguishers", extinguishers);
             SetRef(bootstrapper, "guidedSteps", steps);
+            SetRef(bootstrapper, "scenarioLoader", loader);
             SetRef(bootstrapper, "sessionRecorder", recorder);
             SetRef(bootstrapper, "sessionArchiver", archiver);
             SetRef(bootstrapper, "debrief", menus.Debrief);

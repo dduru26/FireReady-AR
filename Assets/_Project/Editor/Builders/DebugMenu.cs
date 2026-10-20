@@ -25,6 +25,21 @@ namespace FireReady.EditorTools
                 SessionOutcome.Extinguished, 161f, 86, 100, lines, new string[0]));
         }
 
+        [MenuItem("Tools/FireReady/Debug/Show Scenario Select")]
+        static void ShowSelect()
+        {
+            if (!Application.isPlaying) { Debug.LogWarning("Enter Play mode first."); return; }
+            Object.FindAnyObjectByType<FireReady.UI.ScenarioSelectView>(FindObjectsInactive.Include)?.Show("Tester");
+        }
+
+        [MenuItem("Tools/FireReady/Debug/Start S2 Assessment")]
+        static void StartS2()
+        {
+            if (!Application.isPlaying) { Debug.LogWarning("Enter Play mode first."); return; }
+            var catalog = AssetDatabase.LoadAssetAtPath<ScenarioCatalog>(ScenarioBuilder.CatalogPath);
+            EventBus.Publish(new ScenarioSelected(catalog.scenarios[1], TrainingMode.Assessment, "Tester"));
+        }
+
         [MenuItem("Tools/FireReady/Debug/Open History")]
         static void OpenHistory()
         {

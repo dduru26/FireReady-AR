@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ecb6529c86b549438c2ea13d04e01d0, type: 3}
+  m_Name: S2_KitchenPan
+  m_EditorClassIdentifier: FireReady.Core::FireReady.Core.ScenarioDefinition
+  number: 2
+  title: Kitchen pan
+  tagline: Burning cooking oil. Water makes it worse.
+  briefing: A pan of cooking oil has caught fire on the hob. Water makes burning
+    oil erupt, so choose your extinguisher carefully.
+  fireClass: 1
+  address: scenario/s2
+  loadingTitle: "Preparing the kitchen pan fire\u2026"
+  loadingItems:
+  - Cooker, pan and extinguisher rack
+  - Fire, smoke and spray effects
+  - Sounds and captions
