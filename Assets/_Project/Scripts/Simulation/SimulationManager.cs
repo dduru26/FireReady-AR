@@ -24,6 +24,8 @@ namespace FireReady.Simulation
         /// <summary>Seconds spent in Running; frozen while paused or repositioning.</summary>
         public float RunningTime { get; private set; }
 
+        public SessionOutcome Outcome { get; private set; }
+
         // Facts the states share.
         internal bool HasPlane { get; private set; }
         internal bool IsTracking { get; private set; }
@@ -42,6 +44,7 @@ namespace FireReady.Simulation
             Register(new ConfirmingState(this));
             Register(new RunningState(this));
             Register(new PausedState(this));
+            Register(new CompletedState(this));
             m_Constructed = true;
         }
 
@@ -115,6 +118,7 @@ namespace FireReady.Simulation
             EventBus.Subscribe<TrackingLost>(OnTrackingLost);
             EventBus.Subscribe<TrackingRestored>(OnTrackingRestored);
             EventBus.Subscribe<ResumeRequested>(OnResumeRequested);
+            EventBus.Subscribe<SessionEnded>(OnSessionEnded);
         }
 
         void OnDisable()
@@ -126,6 +130,7 @@ namespace FireReady.Simulation
             EventBus.Unsubscribe<TrackingLost>(OnTrackingLost);
             EventBus.Unsubscribe<TrackingRestored>(OnTrackingRestored);
             EventBus.Unsubscribe<ResumeRequested>(OnResumeRequested);
+            EventBus.Unsubscribe<SessionEnded>(OnSessionEnded);
         }
 
         void OnPlaneDetected(PlaneDetected e)
@@ -156,5 +161,11 @@ namespace FireReady.Simulation
         }
 
         void OnResumeRequested(ResumeRequested e) => m_Current?.OnResumeRequested();
+
+        void OnSessionEnded(SessionEnded e)
+        {
+            Outcome = e.Outcome;
+            m_Current?.OnSessionEnded();
+        }
     }
 }

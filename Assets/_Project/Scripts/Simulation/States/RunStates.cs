@@ -12,6 +12,8 @@ namespace FireReady.Simulation
 
         public override void OnTrackingLost() => Machine.ChangeState(SimulationStateId.Paused);
 
+        public override void OnSessionEnded() => Machine.ChangeState(SimulationStateId.Completed);
+
         public override void OnRepositionRequested()
         {
             // Come straight back to the running scenario once the scene is moved (FR-09).
@@ -40,5 +42,12 @@ namespace FireReady.Simulation
             Machine.AfterPlacement = SimulationStateId.Running;
             Machine.ChangeState(SimulationStateId.Placing);
         }
+    }
+
+    /// <summary>The session is over; the completion screen takes it from here.</summary>
+    internal sealed class CompletedState : SimulationState
+    {
+        public CompletedState(SimulationManager machine) : base(machine) { }
+        public override SimulationStateId Id => SimulationStateId.Completed;
     }
 }

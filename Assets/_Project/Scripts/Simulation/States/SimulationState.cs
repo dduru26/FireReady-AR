@@ -25,5 +25,6 @@ namespace FireReady.Simulation
         public virtual void OnTrackingLost() { }
         public virtual void OnTrackingRestored() { }
         public virtual void OnResumeRequested() { }
+        public virtual void OnSessionEnded() { }
     }
 }

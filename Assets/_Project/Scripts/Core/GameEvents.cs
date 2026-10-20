@@ -71,3 +71,13 @@ namespace FireReady.Core
     /// <summary>The trainee pressed Resume on the Paused screen.</summary>
     public readonly struct ResumeRequested : IGameEvent { }
 }
+
+namespace FireReady.Core
+{
+    /// <summary>A tap on the camera view (not on UI), in screen pixels.</summary>
+    public readonly struct ScreenTapped : IGameEvent
+    {
+        public readonly Vector2 Position;
+        public ScreenTapped(Vector2 position) => Position = position;
+    }
+}

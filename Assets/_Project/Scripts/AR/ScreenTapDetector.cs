@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using FireReady.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.EnhancedTouch;
@@ -69,6 +70,7 @@ namespace FireReady.AR
                             (position - m_LastTapPosition).magnitude <= doubleTapRadius;
 
             Tapped?.Invoke(position);
+            EventBus.Publish(new ScreenTapped(position));
 
             if (isDouble)
             {
