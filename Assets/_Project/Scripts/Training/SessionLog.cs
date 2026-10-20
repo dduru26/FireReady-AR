@@ -9,11 +9,13 @@ namespace FireReady.Training
     {
         public string Title = "Training";
         public FireClass FireClass;
-        public string Mode = "Guided";
+        public TrainingMode Mode = TrainingMode.Guided;
+        public string Trainee;
         public DateTime StartedUtc;
 
         public bool AlarmRaised;
         public bool AlarmBeforeSpray;
+        public bool PowerCut;
 
         public int Pickups;
         public bool UsedSuitable;

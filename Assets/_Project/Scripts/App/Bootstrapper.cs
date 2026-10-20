@@ -5,7 +5,6 @@ using FireReady.Simulation;
 using FireReady.Training;
 using FireReady.UI;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.XR.ARFoundation;
 
 namespace FireReady.App
@@ -34,6 +33,7 @@ namespace FireReady.App
         [SerializeField] ScenarioController scenario;
         [SerializeField] ExtinguisherController extinguishers;
         [SerializeField] GuidedStepTracker guidedSteps;
+        [SerializeField] ScenarioLoader scenarioLoader;
         [SerializeField] SessionRecorder sessionRecorder;
         [SerializeField] SessionArchiver sessionArchiver;
 
@@ -55,7 +55,7 @@ namespace FireReady.App
             planeVisibility.Construct(planeManager);
             trackingMonitor.Construct(arSession);
             extinguishers.Construct(arCamera);
-            scenario.Construct(extinguishers, simulation);
+            scenario.Construct(extinguishers, simulation, arCamera);
 
             var sessions = new JsonSessionRepository(Application.persistentDataPath);
             sessionArchiver.Construct(sessions);
@@ -65,27 +65,6 @@ namespace FireReady.App
 
         void Start() => simulation.Begin();
 
-        void OnEnable()
-        {
-            EventBus.Subscribe<RestartRequested>(OnRestart);
-            EventBus.Subscribe<MainMenuRequested>(OnMainMenu);
-        }
-
-        void OnDisable()
-        {
-            EventBus.Unsubscribe<RestartRequested>(OnRestart);
-            EventBus.Unsubscribe<MainMenuRequested>(OnMainMenu);
-        }
-
-        // Until the Start screen exists, Main menu also starts a fresh session.
-        void OnMainMenu(MainMenuRequested e) => Reload();
-        void OnRestart(RestartRequested e) => Reload();
-
-        void Reload()
-        {
-            // Reloading the scene gives a clean session; the AR session restarts with it.
-            SceneManager.LoadScene(gameObject.scene.buildIndex);
-        }
 
         bool Validate()
         {
@@ -103,6 +82,7 @@ namespace FireReady.App
             ok &= Check(scenario, nameof(scenario));
             ok &= Check(extinguishers, nameof(extinguishers));
             ok &= Check(guidedSteps, nameof(guidedSteps));
+            ok &= Check(scenarioLoader, nameof(scenarioLoader));
             ok &= Check(setupHud, nameof(setupHud));
             ok &= Check(simulationHud, nameof(simulationHud));
             ok &= Check(sessionRecorder, nameof(sessionRecorder));

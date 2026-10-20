@@ -43,12 +43,16 @@ namespace FireReady.UI
         {
             EventBus.Subscribe<SessionScored>(OnScored);
             EventBus.Subscribe<SessionSaved>(OnSaved);
+            EventBus.Subscribe<SessionReset>(OnReset);
         }
+
+        void OnReset(SessionReset e) => root.SetActive(false);
 
         void OnDisable()
         {
             EventBus.Unsubscribe<SessionScored>(OnScored);
             EventBus.Unsubscribe<SessionSaved>(OnSaved);
+            EventBus.Unsubscribe<SessionReset>(OnReset);
         }
 
         void OnScored(SessionScored e)

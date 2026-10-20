@@ -26,6 +26,12 @@ namespace FireReady.Core
         Dangerous   // makes things worse or hurts the trainee
     }
 
+    public enum TrainingMode
+    {
+        Guided,      // step prompts and warnings on screen
+        Assessment   // no prompts; the trainee is only scored
+    }
+
     public enum DistanceBand { TooClose, InRange, TooFar }
 
     public enum AimQuality { OffTarget, TooLow, TooHigh, OnBase }

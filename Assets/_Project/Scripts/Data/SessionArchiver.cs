@@ -9,6 +9,7 @@ namespace FireReady.Data
     {
         JsonSessionRepository m_Repository;
         DateTime m_StartedUtc;
+        string m_Trainee;
 
         public void Construct(JsonSessionRepository repository) => m_Repository = repository;
 
@@ -24,7 +25,11 @@ namespace FireReady.Data
             EventBus.Unsubscribe<SessionScored>(OnScored);
         }
 
-        void OnStarted(ScenarioStarted e) => m_StartedUtc = DateTime.UtcNow;
+        void OnStarted(ScenarioStarted e)
+        {
+            m_StartedUtc = DateTime.UtcNow;
+            m_Trainee = e.Trainee;
+        }
 
         void OnScored(SessionScored e)
         {
@@ -37,6 +42,7 @@ namespace FireReady.Data
                 title = e.Title,
                 fireClass = e.FireClass.ToString(),
                 mode = e.Mode,
+                trainee = m_Trainee,
                 startedUtc = m_StartedUtc.ToString("o"),
                 endedUtc = DateTime.UtcNow.ToString("o"),
                 durationSeconds = e.Duration,

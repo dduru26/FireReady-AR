@@ -12,6 +12,7 @@ namespace FireReady.Simulation
     {
         ExtinguisherController m_Extinguishers;
         SimulationManager m_Simulation;
+        Camera m_Camera;
 
         FireHazard m_Fire;
         string m_Title = "Training";
@@ -21,10 +22,11 @@ namespace FireReady.Simulation
 
         public FireHazard Fire => m_Fire;
 
-        public void Construct(ExtinguisherController extinguishers, SimulationManager simulation)
+        public void Construct(ExtinguisherController extinguishers, SimulationManager simulation, Camera arCamera)
         {
             m_Extinguishers = extinguishers;
             m_Simulation = simulation;
+            m_Camera = arCamera;
         }
 
         void OnEnable()
@@ -32,6 +34,8 @@ namespace FireReady.Simulation
             EventBus.Subscribe<ScenePlaced>(OnScenePlaced);
             EventBus.Subscribe<SimulationStateChanged>(OnStateChanged);
             EventBus.Subscribe<EvacuateRequested>(OnEvacuate);
+            EventBus.Subscribe<ScreenTapped>(OnScreenTapped);
+            EventBus.Subscribe<SessionReset>(OnSessionReset);
         }
 
         void OnDisable()
@@ -39,6 +43,29 @@ namespace FireReady.Simulation
             EventBus.Unsubscribe<ScenePlaced>(OnScenePlaced);
             EventBus.Unsubscribe<SimulationStateChanged>(OnStateChanged);
             EventBus.Unsubscribe<EvacuateRequested>(OnEvacuate);
+            EventBus.Unsubscribe<ScreenTapped>(OnScreenTapped);
+            EventBus.Unsubscribe<SessionReset>(OnSessionReset);
+        }
+
+        void OnSessionReset(SessionReset e)
+        {
+            m_Fire = null;
+            m_Started = false;
+            m_Ended = false;
+            m_Running = false;
+        }
+
+        /// <summary>Taps on scene objects other than extinguishers, such as the wall switch in S3.</summary>
+        void OnScreenTapped(ScreenTapped e)
+        {
+            if (!m_Running || m_Ended || m_Camera == null)
+                return;
+            if (Physics.Raycast(m_Camera.ScreenPointToRay(e.Position), out var hit, 6f))
+            {
+                var power = hit.collider.GetComponentInParent<PowerSwitch>();
+                if (power != null)
+                    power.SwitchOff();
+            }
         }
 
         void OnScenePlaced(ScenePlaced e)
@@ -47,9 +74,14 @@ namespace FireReady.Simulation
                 return;
 
             m_Fire = e.SceneRoot.GetComponentInChildren<FireHazard>(true);
-            var info = e.SceneRoot.GetComponentInChildren<ScenarioInfo>(true);
-            if (info != null)
-                m_Title = info.Title;
+            var selection = m_Simulation.Selection;
+            if (selection.HasValue && selection.Value.Scenario != null)
+                m_Title = selection.Value.Scenario.title;
+            else
+            {
+                var info = e.SceneRoot.GetComponentInChildren<ScenarioInfo>(true);
+                if (info != null) m_Title = info.Title;
+            }
 
             if (m_Fire == null)
                 Debug.LogWarning("[Scenario] The placed scene has no FireHazard.");
@@ -62,7 +94,10 @@ namespace FireReady.Simulation
             if (m_Running && !m_Started && m_Fire != null)
             {
                 m_Started = true;
-                EventBus.Publish(new ScenarioStarted(m_Title, m_Fire.FireClass, m_Fire.EvacuateThreshold));
+                var selection = m_Simulation.Selection;
+                var mode = selection.HasValue ? selection.Value.Mode : TrainingMode.Guided;
+                var trainee = selection.HasValue ? selection.Value.Trainee : null;
+                EventBus.Publish(new ScenarioStarted(m_Title, m_Fire.FireClass, m_Fire.EvacuateThreshold, mode, trainee));
                 m_Fire.Announce();
             }
         }

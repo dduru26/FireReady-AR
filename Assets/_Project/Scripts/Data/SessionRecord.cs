@@ -13,6 +13,7 @@ namespace FireReady.Data
         public string title;
         public string fireClass;
         public string mode;
+        public string trainee;
         public string startedUtc;
         public string endedUtc;
         public float durationSeconds;

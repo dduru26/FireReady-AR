@@ -37,6 +37,8 @@ namespace FireReady.Training
             EventBus.Subscribe<MistakeRecorded>(OnMistake);
             EventBus.Subscribe<FireFlaredUp>(OnFlareUp);
             EventBus.Subscribe<SessionEnded>(OnEnded);
+            EventBus.Subscribe<PowerCut>(OnPowerCut);
+            EventBus.Subscribe<SessionReset>(OnReset);
         }
 
         void OnDisable()
@@ -53,6 +55,20 @@ namespace FireReady.Training
             EventBus.Unsubscribe<MistakeRecorded>(OnMistake);
             EventBus.Unsubscribe<FireFlaredUp>(OnFlareUp);
             EventBus.Unsubscribe<SessionEnded>(OnEnded);
+            EventBus.Unsubscribe<PowerCut>(OnPowerCut);
+            EventBus.Unsubscribe<SessionReset>(OnReset);
+        }
+
+        void OnPowerCut(PowerCut e)
+        {
+            if (m_Active) m_Log.PowerCut = true;
+        }
+
+        void OnReset(SessionReset e)
+        {
+            m_Active = false;
+            m_Holding = m_PinPulled = m_Spraying = false;
+            m_Technique = default;
         }
 
         void OnScenarioStarted(ScenarioStarted e)
@@ -61,6 +77,8 @@ namespace FireReady.Training
             {
                 Title = e.Title,
                 FireClass = e.FireClass,
+                Mode = e.Mode,
+                Trainee = e.Trainee,
                 StartedUtc = DateTime.UtcNow
             };
             m_Active = true;
@@ -159,7 +177,7 @@ namespace FireReady.Training
 
             var lines = m_Calculator.Calculate(m_Log, out int total, out int max);
             Debug.Log($"[Session] {m_Log.Title}: {e.Outcome}, score {total}/{max}");
-            EventBus.Publish(new SessionScored(m_Log.Title, m_Log.FireClass, m_Log.Mode, e.Outcome, e.Duration,
+            EventBus.Publish(new SessionScored(m_Log.Title, m_Log.FireClass, m_Log.Mode.ToString(), e.Outcome, e.Duration,
                 total, max, lines, m_Log.Mistakes.ToArray()));
         }
     }

@@ -82,6 +82,7 @@ namespace FireReady.Simulation
             EventBus.Subscribe<SqueezeChanged>(OnSqueeze);
             EventBus.Subscribe<ReturnExtinguisherRequested>(OnReturnRequested);
             EventBus.Subscribe<SessionEnded>(OnSessionEnded);
+            EventBus.Subscribe<SessionReset>(OnSessionReset);
         }
 
         void OnDisable()
@@ -92,6 +93,23 @@ namespace FireReady.Simulation
             EventBus.Unsubscribe<SqueezeChanged>(OnSqueeze);
             EventBus.Unsubscribe<ReturnExtinguisherRequested>(OnReturnRequested);
             EventBus.Unsubscribe<SessionEnded>(OnSessionEnded);
+            EventBus.Unsubscribe<SessionReset>(OnSessionReset);
+        }
+
+        void OnSessionReset(SessionReset e)
+        {
+            m_Running = false;
+            m_SqueezeHeld = false;
+            SetSpraying(false);
+            // The held extinguisher lives on the camera, not in the placed scene.
+            if (m_Held != null)
+                Destroy(m_Held.gameObject);
+            m_Held = null;
+            m_Fire = null;
+            Contact = SprayContact.None;
+            m_ReportedBand = (DistanceBand)(-1);
+            m_ReportedAim = (AimQuality)(-1);
+            m_ReportedSweep = (SweepQuality)(-1);
         }
 
         void OnStateChanged(SimulationStateChanged e)

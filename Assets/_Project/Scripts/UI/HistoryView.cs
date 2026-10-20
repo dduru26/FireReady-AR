@@ -37,8 +37,19 @@ namespace FireReady.UI
             root.SetActive(false);
         }
 
-        void OnEnable() => EventBus.Subscribe<HistoryRequested>(OnRequested);
-        void OnDisable() => EventBus.Unsubscribe<HistoryRequested>(OnRequested);
+        void OnEnable()
+        {
+            EventBus.Subscribe<HistoryRequested>(OnRequested);
+            EventBus.Subscribe<SessionReset>(OnReset);
+        }
+
+        void OnDisable()
+        {
+            EventBus.Unsubscribe<HistoryRequested>(OnRequested);
+            EventBus.Unsubscribe<SessionReset>(OnReset);
+        }
+
+        void OnReset(SessionReset e) => Hide();
 
         void OnRequested(HistoryRequested e) => Show();
 

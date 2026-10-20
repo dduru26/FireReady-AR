@@ -75,12 +75,28 @@ namespace FireReady.AR
         {
             EventBus.Subscribe<SimulationStateChanged>(OnStateChanged);
             EventBus.Subscribe<PlaceRequested>(OnPlaceRequested);
+            EventBus.Subscribe<ScenarioLoaded>(OnScenarioLoaded);
+            EventBus.Subscribe<SessionReset>(OnSessionReset);
         }
 
         void OnDisable()
         {
             EventBus.Unsubscribe<SimulationStateChanged>(OnStateChanged);
             EventBus.Unsubscribe<PlaceRequested>(OnPlaceRequested);
+            EventBus.Unsubscribe<ScenarioLoaded>(OnScenarioLoaded);
+            EventBus.Unsubscribe<SessionReset>(OnSessionReset);
+        }
+
+        /// <summary>The scenario prefab arrives from Addressables; it is placed on the next tap.</summary>
+        void OnScenarioLoaded(ScenarioLoaded e) => scenePrefab = e.Prefab;
+
+        void OnSessionReset(SessionReset e)
+        {
+            if (m_Scene != null) Destroy(m_Scene);
+            if (m_Anchor != null) Destroy(m_Anchor.gameObject);
+            m_Scene = null;
+            m_Anchor = null;
+            scenePrefab = null;
         }
 
         void OnDestroy()

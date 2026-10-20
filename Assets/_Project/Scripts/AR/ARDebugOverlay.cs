@@ -39,7 +39,9 @@ namespace FireReady.AR
         void OnDisable() => EventBus.Unsubscribe<SimulationStateChanged>(OnStateChanged);
 
         // Keep the readout off the full-screen debrief and history screens.
-        void OnStateChanged(SimulationStateChanged e) => m_Hidden = e.Current == SimulationStateId.Completed;
+        void OnStateChanged(SimulationStateChanged e) => m_Hidden = e.Current == SimulationStateId.Completed ||
+                                                              e.Current == SimulationStateId.MainMenu ||
+                                                              e.Current == SimulationStateId.Loading;
 
         void OnGUI()
         {

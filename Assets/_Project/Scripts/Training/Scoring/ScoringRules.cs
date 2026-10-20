@@ -31,6 +31,16 @@ namespace FireReady.Training
 
         public ScoreLine Evaluate(SessionLog log)
         {
+            if (log.FireClass == FireClass.Electrical)
+            {
+                // Live electrical fire: the alarm and cutting the power are worth half each.
+                int points = (log.AlarmRaised ? 5 : 0) + (log.PowerCut ? 5 : 0);
+                string feedback = !log.PowerCut ? "Cut the power at the wall before you tackle an electrical fire."
+                                : !log.AlarmRaised ? "You never raised the alarm."
+                                : null;
+                return new ScoreLine(Name, points, MaxPoints, feedback);
+            }
+
             if (!log.AlarmRaised)
                 return new ScoreLine(Name, 0, MaxPoints, "You never raised the alarm.");
             if (!log.AlarmBeforeSpray)

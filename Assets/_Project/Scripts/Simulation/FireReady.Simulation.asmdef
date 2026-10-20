@@ -1,7 +1,7 @@
 {
     "name": "FireReady.Simulation",
     "rootNamespace": "FireReady.Simulation",
-    "references": ["FireReady.Core"],
+    "references": ["FireReady.Core", "Unity.Addressables", "Unity.ResourceManager"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

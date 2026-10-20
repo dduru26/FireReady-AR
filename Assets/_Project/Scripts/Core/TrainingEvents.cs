@@ -9,14 +9,71 @@ namespace FireReady.Core
         public readonly string Title;
         public readonly FireClass FireClass;
         public readonly float EvacuateThreshold;
+        public readonly TrainingMode Mode;
+        public readonly string Trainee;
 
-        public ScenarioStarted(string title, FireClass fireClass, float evacuateThreshold)
+        public ScenarioStarted(string title, FireClass fireClass, float evacuateThreshold,
+            TrainingMode mode = TrainingMode.Guided, string trainee = null)
         {
             Title = title;
             FireClass = fireClass;
             EvacuateThreshold = evacuateThreshold;
+            Mode = mode;
+            Trainee = trainee;
         }
     }
+
+    /// <summary>The trainee chose a scenario and mode and pressed Continue.</summary>
+    public readonly struct ScenarioSelected : IGameEvent
+    {
+        public readonly ScenarioDefinition Scenario;
+        public readonly TrainingMode Mode;
+        public readonly string Trainee;
+
+        public ScenarioSelected(ScenarioDefinition scenario, TrainingMode mode, string trainee)
+        {
+            Scenario = scenario;
+            Mode = mode;
+            Trainee = trainee;
+        }
+    }
+
+    public readonly struct ScenarioLoadProgress : IGameEvent
+    {
+        public readonly float Progress; // 0 to 1
+        public ScenarioLoadProgress(float progress) => Progress = progress;
+    }
+
+    /// <summary>The scenario prefab is in memory (loaded through Addressables).</summary>
+    public readonly struct ScenarioLoaded : IGameEvent
+    {
+        public readonly ScenarioDefinition Scenario;
+        public readonly GameObject Prefab;
+
+        public ScenarioLoaded(ScenarioDefinition scenario, GameObject prefab)
+        {
+            Scenario = scenario;
+            Prefab = prefab;
+        }
+    }
+
+    public readonly struct ScenarioLoadFailed : IGameEvent
+    {
+        public readonly string Error;
+        public ScenarioLoadFailed(string error) => Error = error;
+    }
+
+    public readonly struct LoadingCancelled : IGameEvent { }
+    public readonly struct BriefingAccepted : IGameEvent { }
+
+    /// <summary>
+    /// Everything per-session is cleared (Restart or Main menu). Systems drop the
+    /// placed scene, the held extinguisher and their counters, without reloading the scene.
+    /// </summary>
+    public readonly struct SessionReset : IGameEvent { }
+
+    /// <summary>The trainee switched off the power at the wall (S3).</summary>
+    public readonly struct PowerCut : IGameEvent { }
 
     // ---- Fire -------------------------------------------------------------------
 

@@ -24,6 +24,9 @@ namespace FireReady.Training
 
         readonly bool[] m_Done = new bool[k_Titles.Length];
         bool m_Active;
+        bool m_Electrical;
+        bool m_Alarm;
+        bool m_Power;
         bool m_HoldingSuitable;
         bool m_Spraying;
         TechniqueChanged m_Technique;
@@ -43,6 +46,8 @@ namespace FireReady.Training
             EventBus.Subscribe<TechniqueChanged>(OnTechnique);
             EventBus.Subscribe<SprayStateChanged>(OnSpray);
             EventBus.Subscribe<SessionEnded>(OnEnded);
+            EventBus.Subscribe<PowerCut>(OnPowerCut);
+            EventBus.Subscribe<SessionReset>(OnReset);
         }
 
         void OnDisable()
@@ -55,15 +60,44 @@ namespace FireReady.Training
             EventBus.Unsubscribe<TechniqueChanged>(OnTechnique);
             EventBus.Unsubscribe<SprayStateChanged>(OnSpray);
             EventBus.Unsubscribe<SessionEnded>(OnEnded);
+            EventBus.Unsubscribe<PowerCut>(OnPowerCut);
+            EventBus.Unsubscribe<SessionReset>(OnReset);
         }
 
         void OnScenarioStarted(ScenarioStarted e)
         {
+            ResetSteps();
+            m_Electrical = e.FireClass == FireClass.Electrical;
             m_Active = true;
             Announce(force: true);
         }
 
-        void OnAlarm(AlarmRaised e) => Complete(Alarm);
+        void OnReset(SessionReset e)
+        {
+            ResetSteps();
+            m_Active = false;
+        }
+
+        void ResetSteps()
+        {
+            for (int i = 0; i < m_Done.Length; i++) m_Done[i] = false;
+            m_HoldingSuitable = m_Spraying = m_Alarm = m_Power = false;
+            m_Technique = default;
+            m_LastAnnounced = m_LastCompleted = -1;
+        }
+
+        // For an electrical fire, step 1 also needs the power cut at the wall.
+        void OnAlarm(AlarmRaised e)
+        {
+            m_Alarm = true;
+            if (!m_Electrical || m_Power) Complete(Alarm);
+        }
+
+        void OnPowerCut(PowerCut e)
+        {
+            m_Power = true;
+            if (m_Alarm) Complete(Alarm);
+        }
 
         void OnPickedUp(ExtinguisherPickedUp e)
         {
@@ -144,7 +178,9 @@ namespace FireReady.Training
                 if (!m_Done[i]) { next = i; break; }
             }
 
-            string title = current >= 0 ? k_Titles[current] : "All steps done";
+            string title = current < 0 ? "All steps done"
+                         : current == Alarm && m_Electrical ? "Raise the alarm and cut the power at the wall"
+                         : k_Titles[current];
             string nextTitle = next >= 0 ? ShortTitle(next) : "finish";
             EventBus.Publish(new GuidedStepChanged(Mathf.Max(current, 0), m_Done.Length, completed, title, nextTitle));
         }

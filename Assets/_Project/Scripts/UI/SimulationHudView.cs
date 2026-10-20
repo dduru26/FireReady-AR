@@ -19,6 +19,8 @@ namespace FireReady.UI
         [Header("Top bar")]
         [SerializeField] TMP_Text scenarioTitle;
         [SerializeField] TMP_Text timerLabel;
+        [SerializeField] Image modePill;
+        [SerializeField] TMP_Text modeLabel;
 
         [Header("Intensity")]
         [SerializeField] Image trendBadge;
@@ -90,6 +92,7 @@ namespace FireReady.UI
         bool m_Alarm;
         float m_Remaining;
         AgentSuitability m_Suitability;
+        bool m_Assessment;
 
         void Awake()
         {
@@ -121,6 +124,7 @@ namespace FireReady.UI
             EventBus.Subscribe<AgentRemainingChanged>(OnRemaining);
             EventBus.Subscribe<SprayStateChanged>(OnSpray);
             EventBus.Subscribe<SessionEnded>(OnSessionEnded);
+            EventBus.Subscribe<SessionReset>(OnSessionReset);
         }
 
         void OnDisable()
@@ -138,6 +142,23 @@ namespace FireReady.UI
             EventBus.Unsubscribe<AgentRemainingChanged>(OnRemaining);
             EventBus.Unsubscribe<SprayStateChanged>(OnSpray);
             EventBus.Unsubscribe<SessionEnded>(OnSessionEnded);
+            EventBus.Unsubscribe<SessionReset>(OnSessionReset);
+        }
+
+        void OnSessionReset(SessionReset e)
+        {
+            m_Elapsed = 0f;
+            m_ShownSeconds = -1;
+            m_Alarm = false;
+            m_Holding = m_PinPulled = m_Spraying = false;
+            alarmLabel.text = "Raise alarm";
+            alarmIcon.color = UiPalette.Panel;
+            warningCard.SetActive(false);
+            stepCard.SetActive(!m_Assessment);
+            ShowEmptyHand();
+            SetChipsUnknown();
+            UpdateCaption();
+            hudRoot.SetActive(false);
         }
 
         void Update()
@@ -156,7 +177,7 @@ namespace FireReady.UI
             if (warningCard.activeSelf && Time.unscaledTime >= m_WarningUntil)
             {
                 warningCard.SetActive(false);
-                stepCard.SetActive(true);
+                stepCard.SetActive(!m_Assessment);
             }
         }
 
@@ -175,6 +196,12 @@ namespace FireReady.UI
         {
             m_Title = e.Title;
             m_Threshold = e.EvacuateThreshold;
+            m_Assessment = e.Mode == TrainingMode.Assessment;
+            modeLabel.text = m_Assessment ? "Assessment" : "Guided";
+            modePill.color = m_Assessment ? UiPalette.Hex(0x3C393A) : GuidedBlue;
+            // Assessment hides the prompts; the trainee is only scored.
+            stepCard.SetActive(!m_Assessment);
+            warningCard.SetActive(false);
             scenarioTitle.text = e.Title;
             timerLabel.text = FormatTime(0);
             thresholdLabel.text = $"Evacuate above {m_Threshold:0}";
@@ -228,6 +255,8 @@ namespace FireReady.UI
 
         void ShowWarning(string title, string advice)
         {
+            if (m_Assessment)
+                return;
             warningTitle.text = title;
             warningAdvice.text = advice ?? string.Empty;
             warningCard.SetActive(true);
