@@ -56,21 +56,29 @@ namespace FireReady.EditorTools
             var main = ps.main;
             main.loop = true;
             main.duration = 1f;
-            main.startLifetime = new ParticleSystem.MinMaxCurve(0.45f, 0.8f);
-            main.startSpeed = new ParticleSystem.MinMaxCurve(0.35f, 0.7f);
-            main.startSize = new ParticleSystem.MinMaxCurve(0.1f, 0.24f);
+            main.startLifetime = new ParticleSystem.MinMaxCurve(0.6f, 1.0f);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(0.5f, 0.95f);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.16f, 0.36f);
             main.startRotation = new ParticleSystem.MinMaxCurve(0f, Mathf.PI * 2f);
             main.simulationSpace = ParticleSystemSimulationSpace.Local;
-            main.maxParticles = 300;
+            main.maxParticles = 400;
             main.playOnAwake = true;
 
             var emission = ps.emission;
-            emission.rateOverTime = 40f;
+            emission.rateOverTime = 60f;
 
             var shape = ps.shape;
             shape.shapeType = ParticleSystemShapeType.Cone;
-            shape.angle = 8f;
-            shape.radius = 0.12f;
+            shape.angle = 10f;
+            shape.radius = 0.14f;
+
+            // Flames sway and lick upwards instead of rising in straight lines.
+            var noise = ps.noise;
+            noise.enabled = true;
+            noise.strength = 0.35f;
+            noise.frequency = 1.2f;
+            noise.scrollSpeed = 1.5f;
+            noise.quality = ParticleSystemNoiseQuality.Low;
             shape.rotation = new Vector3(-90f, 0f, 0f);
 
             var col = ps.colorOverLifetime;
@@ -82,13 +90,44 @@ namespace FireReady.EditorTools
             size.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.Linear(0f, 1f, 1f, 0.3f));
         }
 
+        /// <summary>A bright yellow-white core at the base of the flames.</summary>
+        public static void Core(ParticleSystem ps)
+        {
+            var main = ps.main;
+            main.loop = true;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(0.3f, 0.55f);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(0.3f, 0.6f);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.12f, 0.22f);
+            main.startRotation = new ParticleSystem.MinMaxCurve(0f, Mathf.PI * 2f);
+            main.simulationSpace = ParticleSystemSimulationSpace.Local;
+            main.maxParticles = 200;
+            main.playOnAwake = true;
+
+            var emission = ps.emission;
+            emission.rateOverTime = 30f;
+
+            var shape = ps.shape;
+            shape.shapeType = ParticleSystemShapeType.Cone;
+            shape.angle = 5f;
+            shape.radius = 0.1f;
+            shape.rotation = new Vector3(-90f, 0f, 0f);
+
+            var col = ps.colorOverLifetime;
+            col.enabled = true;
+            col.color = Fade(new Color(1f, 1f, 0.85f), new Color(1f, 0.85f, 0.35f), new Color(1f, 0.5f, 0.1f), 1f);
+
+            var size = ps.sizeOverLifetime;
+            size.enabled = true;
+            size.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.Linear(0f, 1f, 1f, 0.2f));
+        }
+
         public static void Smoke(ParticleSystem ps)
         {
             var main = ps.main;
             main.loop = true;
-            main.startLifetime = new ParticleSystem.MinMaxCurve(1.6f, 2.6f);
-            main.startSpeed = new ParticleSystem.MinMaxCurve(0.3f, 0.5f);
-            main.startSize = new ParticleSystem.MinMaxCurve(0.2f, 0.42f);
+            main.startLifetime = new ParticleSystem.MinMaxCurve(2.2f, 3.4f);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(0.35f, 0.6f);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.25f, 0.55f);
             main.startRotation = new ParticleSystem.MinMaxCurve(0f, Mathf.PI * 2f);
             main.simulationSpace = ParticleSystemSimulationSpace.Local;
             main.maxParticles = 120;
@@ -105,7 +144,7 @@ namespace FireReady.EditorTools
 
             var col = ps.colorOverLifetime;
             col.enabled = true;
-            col.color = Fade(new Color(0.25f, 0.25f, 0.27f), new Color(0.3f, 0.3f, 0.32f), new Color(0.4f, 0.4f, 0.42f), 0.55f);
+            col.color = Fade(new Color(0.12f, 0.12f, 0.13f), new Color(0.22f, 0.22f, 0.24f), new Color(0.35f, 0.35f, 0.37f), 0.7f);
 
             var size = ps.sizeOverLifetime;
             size.enabled = true;

@@ -184,8 +184,22 @@ namespace FireReady.EditorTools
             ParticleFactory.Smoke(smoke);
             var embers = ParticleFactory.Create("Embers", flameBase, Vector3.zero, s_Flame);
             ParticleFactory.Embers(embers);
+            var core = ParticleFactory.Create("Core", flameBase, Vector3.zero, s_Flame);
+            ParticleFactory.Core(core);
+
+            var lightGo = new GameObject("Firelight");
+            lightGo.transform.SetParent(flameBase, false);
+            lightGo.transform.localPosition = new Vector3(0f, 0.25f, 0f);
+            var light = lightGo.AddComponent<Light>();
+            light.type = LightType.Point;
+            light.color = new Color(1f, 0.55f, 0.2f);
+            light.intensity = 2f;
+            light.range = 2f;
+            light.shadows = LightShadows.None;
 
             var visuals = fireGo.AddComponent<FireVisuals>();
+            SetRef(visuals, "core", core);
+            SetRef(visuals, "fireLight", light);
             SetRef(visuals, "flames", flames);
             SetRef(visuals, "smoke", smoke);
             SetRef(visuals, "embers", embers);

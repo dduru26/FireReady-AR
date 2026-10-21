@@ -75,7 +75,13 @@ namespace FireReady.EditorSetup
         }
 
         [MenuItem("Tools/FireReady/Build iOS Xcode Project")]
-        public static void BuildIOS()
+        public static void BuildIOS() => Build(BuildOptions.Development, "development");
+
+        /// <summary>No debug overlay, no "Development Build" label: the build for the demo video.</summary>
+        [MenuItem("Tools/FireReady/Build iOS Xcode Project (Release)")]
+        public static void BuildIOSRelease() => Build(BuildOptions.None, "release");
+
+        static void Build(BuildOptions buildOptions, string kind)
         {
             var options = new BuildPlayerOptions
             {
@@ -83,9 +89,9 @@ namespace FireReady.EditorSetup
                 locationPathName = "Builds/iOS",
                 target = BuildTarget.iOS,
                 targetGroup = BuildTargetGroup.iOS,
-                options = BuildOptions.Development
+                options = buildOptions
             };
-            Log("iOS build started");
+            Log($"iOS {kind} build started");
             var report = BuildPipeline.BuildPlayer(options);
             Log("iOS build finished: " + report.summary.result + ", errors " + report.summary.totalErrors +
                 ", size " + (report.summary.totalSize / (1024 * 1024)) + " MB, time " + report.summary.totalTime);
