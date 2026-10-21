@@ -16,7 +16,9 @@
         "UnityEngine.UI",
         "Unity.TextMeshPro",
         "Unity.Addressables",
-        "Unity.Addressables.Editor"
+        "Unity.Addressables.Editor",
+        "UnityEditor.TestRunner",
+        "UnityEngine.TestRunner"
     ],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],

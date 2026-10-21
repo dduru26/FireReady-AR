@@ -121,6 +121,13 @@ namespace FireReady.Simulation
             }
         }
 
+        /// <summary>Sets the fire to a given intensity (used by tests and tools).</summary>
+        public void Ignite(float intensity)
+        {
+            m_Ended = false;
+            SetIntensity(intensity);
+        }
+
         /// <summary>Re-sends the current intensity (used when the scenario starts).</summary>
         public void Announce() => EventBus.Publish(new FireIntensityChanged(m_Intensity, FireTrend.Steady));
     }
