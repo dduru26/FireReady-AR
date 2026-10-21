@@ -202,6 +202,8 @@ namespace FireReady.UI
             // Assessment hides the prompts; the trainee is only scored.
             stepCard.SetActive(!m_Assessment);
             warningCard.SetActive(false);
+            // Distance, aim and sweep coaching is a prompt too.
+            chipsRow.SetActive(!m_Assessment);
             scenarioTitle.text = e.Title;
             timerLabel.text = FormatTime(0);
             thresholdLabel.text = $"Evacuate above {m_Threshold:0}";
@@ -363,7 +365,9 @@ namespace FireReady.UI
         void RefreshAgentStatus()
         {
             string pin = m_PinPulled ? "<color=#6FD99A><b>Pin pulled</b></color>" : "<color=#F5C518><b>Pin in</b></color>";
-            string warn = m_Suitability == AgentSuitability.Dangerous ? " · <color=#FF6B63>unsafe here</color>"
+            // Assessment does not tell the trainee whether the extinguisher suits the fire.
+            string warn = m_Assessment ? string.Empty
+                        : m_Suitability == AgentSuitability.Dangerous ? " · <color=#FF6B63>unsafe here</color>"
                         : m_Suitability == AgentSuitability.Poor ? " · <color=#F5C518>poor choice</color>"
                         : string.Empty;
             agentStatus.text = $"{pin} · {m_Remaining:0.0} s left{warn}";

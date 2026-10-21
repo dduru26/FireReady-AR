@@ -29,6 +29,7 @@ namespace FireReady.Audio
         string m_Momentary;
         float m_MomentaryUntil;
         string m_LastCaption;
+        bool m_Assessment;
         readonly StringBuilder m_Caption = new StringBuilder(64);
 
         void Awake()
@@ -103,6 +104,7 @@ namespace FireReady.Audio
 
         void OnScenarioStarted(ScenarioStarted e)
         {
+            m_Assessment = e.Mode == TrainingMode.Assessment;
             if (m_Cues == null)
                 return;
             m_Fire.clip = m_Cues.fireLoop;
@@ -144,7 +146,12 @@ namespace FireReady.Audio
 
         void OnPin(PinPulled e) => PlayOnce(m_Cues != null ? m_Cues.pinClick : null, "Pin clicks out");
         void OnPickedUp(ExtinguisherPickedUp e) => PlayOnce(m_Cues != null ? m_Cues.pickUp : null, null);
-        void OnMistake(MistakeRecorded e) => PlayOnce(m_Cues != null ? m_Cues.warning : null, "Warning tone");
+        // The warning tone coaches the trainee, so Assessment mode stays silent; the mistake is still scored.
+        void OnMistake(MistakeRecorded e)
+        {
+            if (!m_Assessment)
+                PlayOnce(m_Cues != null ? m_Cues.warning : null, "Warning tone");
+        }
         void OnFlareUp(FireFlaredUp e) => PlayOnce(m_Cues != null ? m_Cues.flareUp : null, "Whoosh: the fire flares up");
 
         void OnExtinguished(FireExtinguished e)
