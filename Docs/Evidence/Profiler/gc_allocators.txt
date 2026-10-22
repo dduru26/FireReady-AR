@@ -1,0 +1,18 @@
+GC allocation by caller, frames 3050-3849 (800 frames)
+     4341 B/frame  DrawScreenSpaceUI/UIEvents.IMGUIRenderOverlays/GUI.Repaint/FireReady.AR.dll!FireReady.AR::ARDebugOverlay.OnGUI() [Invoke]
+      538 B/frame  UIEvents.IMGUIRenderOverlays/GUI.Repaint/FireReady.AR.dll!FireReady.AR::ARDebugOverlay.OnGUI() [Invoke]/UnityEngine.IMGUIModule.dll!UnityEngine::GUIStyle.GetMeshInfo() [Invoke]
+      417 B/frame  PlayerLoop/PreUpdate.IMGUISendQueuedEvents/GUI.ProcessEvents/FireReady.AR.dll!FireReady.AR::ARDebugOverlay.OnGUI() [Invoke]
+      368 B/frame  DrawScreenSpaceUI/UIEvents.IMGUIRenderOverlays/GUI.Repaint/UnityEngine.IMGUIModule.dll!UnityEngine::GUIUtility.BeginGUI() [Invoke]
+      128 B/frame  Inl_RenderCameraStack/Inl_UniversalRenderPipeline.RenderSingleCameraInternal: Main Camera/Inl_RecordRenderGraph/Inl_On Record Render Graph
+       39 B/frame  PlayerLoop/PreUpdate.IMGUISendQueuedEvents/GUI.ProcessEvents/UnityEngine.IMGUIModule.dll!UnityEngine::GUIUtility.BeginGUI() [Invoke]
+       25 B/frame  PlayerLoop/Update.ScriptRunBehaviourUpdate/BehaviourUpdate/FireReady.Simulation.dll!FireReady.Simulation::ExtinguisherController.Update() [Invoke]
+       16 B/frame  PlayerLoop/Update.ScriptRunBehaviourUpdate/BehaviourUpdate/FireReady.Simulation.dll!FireReady.Simulation::EffectPool.Update() [Invoke]
+       16 B/frame  PlayerLoop/Update.ScriptRunBehaviourUpdate/BehaviourUpdate/FireReady.Simulation.dll!FireReady.Simulation::ScenarioController.Update() [Invoke]
+       15 B/frame  PlayerLoop/Update.ScriptRunBehaviourUpdate/BehaviourUpdate/UnityEngine.UI.dll!UnityEngine.EventSystems::EventSystem.Update() [Invoke]
+        2 B/frame  PlayerLoop/Update.ScriptRunBehaviourUpdate/BehaviourUpdate/FireReady.AR.dll!FireReady.AR::ScreenTapDetector.Update() [Invoke]
+        1 B/frame  Update.ScriptRunBehaviourUpdate/BehaviourUpdate/UnityEngine.UI.dll!UnityEngine.EventSystems::EventSystem.Update() [Invoke]/UnityEngine.UI.dll!UnityEngine.UI::Image.Start() [Coroutine: MoveNext] [Invoke]
+        1 B/frame  PlayerLoop/Update.ScriptRunBehaviourUpdate/BehaviourUpdate/FireReady.UI.dll!FireReady.UI::SimulationHudView.Update() [Invoke]
+        1 B/frame  UnityEngine.UIModule.dll!UnityEngine::Canvas.SendWillRenderCanvases() [Invoke]/Layout/CanvasUpdate.Layout/UnityEngine.UI.dll!UnityEngine.UI::LayoutGroup.OnRectTransformDimensionsChange() [Invoke]
+        1 B/frame  UnityEngine.UI.dll!UnityEngine.EventSystems::EventSystem.Update() [Invoke]/GameObject.Deactivate/GameObject.ActivateAwakeRecursively/UnityEngine.UI.dll!UnityEngine.UI::Selectable.OnDisable() [Invoke]
+        0 B/frame  Render/CanvasUpdate.PreRender/TMP.GenerateText/TMP GenerateText - Phase II
+        0 B/frame  PlayerLoop/Update.ScriptRunBehaviourUpdate/BehaviourUpdate/FireReady.Audio.dll!FireReady.Audio::AudioManager.Update() [Invoke]

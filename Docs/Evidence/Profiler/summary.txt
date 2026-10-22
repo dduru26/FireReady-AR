@@ -1,0 +1,13 @@
+Frames 1850-3849 (2000 read)
+Frame time ms: avg 16.66, median 16.60, p95 18.63, p99 19.49, max 21.46
+Avg FPS 60.0; frames over 20 ms: 5 (0.3%); over 33 ms: 0
+Main-thread work ms (PlayerLoop minus WaitForTargetFPS): avg 4.50, p95 7.45, max 19.92
+GC alloc: frames with any 2000 (100.0%), avg 3765 B/frame, max 167424 B
+  ExtinguisherController: avg 0.018 ms/frame
+  ScenarioController: avg 0.004 ms/frame
+  FireVisuals: avg 0.005 ms/frame
+  PlacementController: avg 0.007 ms/frame
+  SessionRecorder: avg 0.001 ms/frame
+  AudioManager: avg 0.001 ms/frame
+  SimulationHudView: avg 0.002 ms/frame
+  EffectPool: avg 0.003 ms/frame
