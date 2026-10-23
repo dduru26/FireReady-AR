@@ -811,19 +811,21 @@ namespace FireReady.EditorTools
 
         static HistoryRow HistoryRowTemplate(RectTransform list)
         {
+            // Three lines on the left (title, outcome, mode and date) and the score on the right,
+            // so long outcomes like "Evacuated safely" never collide with "Assessment · date".
             var row = Node("Row Template", list);
-            row.gameObject.AddComponent<LayoutElement>().preferredHeight = 64 * Pt;
-            Rounded(row, Border, 32 * Pt).raycastTarget = false;
+            row.gameObject.AddComponent<LayoutElement>().preferredHeight = 84 * Pt;
+            Rounded(row, Border, 24 * Pt).raycastTarget = false;
             var inner = Node("Inner", row);
             Stretch(inner);
             inner.offsetMin = new Vector2(1.5f * Pt, 1.5f * Pt);
             inner.offsetMax = new Vector2(-1.5f * Pt, -1.5f * Pt);
-            Rounded(inner, Surface, 30.5f * Pt).raycastTarget = false;
+            Rounded(inner, Surface, 22.5f * Pt).raycastTarget = false;
 
             var badge = Node("Badge", inner);
             badge.anchorMin = badge.anchorMax = new Vector2(0, 0.5f);
             badge.pivot = new Vector2(0, 0.5f);
-            badge.anchoredPosition = new Vector2(10 * Pt, 0);
+            badge.anchoredPosition = new Vector2(12 * Pt, 0);
             badge.sizeDelta = new Vector2(40 * Pt, 40 * Pt);
             var badgeImage = Rounded(badge, Ink, 20 * Pt);
             badgeImage.raycastTarget = false;
@@ -832,35 +834,31 @@ namespace FireReady.EditorTools
             badgeLabel.alignment = TextAlignmentOptions.Center;
 
             var title = Label(inner, "Title", "Office waste bin", 16, Ink, FontStyles.Bold);
-            title.rectTransform.anchorMin = new Vector2(0, 0.5f);
-            title.rectTransform.anchorMax = new Vector2(1, 1);
-            title.rectTransform.offsetMin = new Vector2(62 * Pt, 0);
-            title.rectTransform.offsetMax = new Vector2(-110 * Pt, -10 * Pt);
-            title.alignment = TextAlignmentOptions.BottomLeft;
+            TopLine(title.rectTransform, 12, 20);
+            title.alignment = TextAlignmentOptions.MidlineLeft;
             title.textWrappingMode = TextWrappingModes.NoWrap;
             title.overflowMode = TextOverflowModes.Ellipsis;
-            var subtitle = Label(inner, "Subtitle", "Guided · Today, 14:32", 13, Ink2, FontStyles.Normal);
-            subtitle.rectTransform.anchorMin = new Vector2(0, 0);
-            subtitle.rectTransform.anchorMax = new Vector2(1, 0.5f);
-            subtitle.rectTransform.offsetMin = new Vector2(62 * Pt, 10 * Pt);
-            subtitle.rectTransform.offsetMax = new Vector2(-110 * Pt, -2 * Pt);
-            subtitle.alignment = TextAlignmentOptions.TopLeft;
-            subtitle.textWrappingMode = TextWrappingModes.NoWrap;
 
-            var score = Label(inner, "Score", "86", 18, Ink, FontStyles.Bold);
-            score.rectTransform.anchorMin = new Vector2(1, 0.5f);
+            var outcome = Label(inner, "Outcome", "Extinguished", 13, Green, FontStyles.Bold);
+            TopLine(outcome.rectTransform, 33, 17);
+            outcome.alignment = TextAlignmentOptions.MidlineLeft;
+            outcome.textWrappingMode = TextWrappingModes.NoWrap;
+            outcome.overflowMode = TextOverflowModes.Ellipsis;
+
+            var subtitle = Label(inner, "Subtitle", "Guided · Today, 14:32", 13, Ink2, FontStyles.Normal);
+            TopLine(subtitle.rectTransform, 51, 17);
+            subtitle.alignment = TextAlignmentOptions.MidlineLeft;
+            subtitle.textWrappingMode = TextWrappingModes.NoWrap;
+            subtitle.overflowMode = TextOverflowModes.Ellipsis;
+
+            var score = Label(inner, "Score", "86", 22, Ink, FontStyles.Bold);
+            score.rectTransform.anchorMin = new Vector2(1, 0);
             score.rectTransform.anchorMax = new Vector2(1, 1);
             score.rectTransform.pivot = new Vector2(1, 0.5f);
-            score.rectTransform.offsetMin = new Vector2(-120 * Pt, 0);
-            score.rectTransform.offsetMax = new Vector2(-16 * Pt, -10 * Pt);
-            score.alignment = TextAlignmentOptions.BottomRight;
-            var outcome = Label(inner, "Outcome", "Extinguished", 12, Green, FontStyles.Bold);
-            outcome.rectTransform.anchorMin = new Vector2(1, 0);
-            outcome.rectTransform.anchorMax = new Vector2(1, 0.5f);
-            outcome.rectTransform.offsetMin = new Vector2(-120 * Pt, 10 * Pt);
-            outcome.rectTransform.offsetMax = new Vector2(-16 * Pt, -2 * Pt);
-            outcome.alignment = TextAlignmentOptions.TopRight;
-            outcome.textWrappingMode = TextWrappingModes.NoWrap;
+            score.rectTransform.offsetMin = new Vector2(-64 * Pt, 0);
+            score.rectTransform.offsetMax = new Vector2(-18 * Pt, 0);
+            score.alignment = TextAlignmentOptions.MidlineRight;
+            score.textWrappingMode = TextWrappingModes.NoWrap;
 
             var component = row.gameObject.AddComponent<HistoryRow>();
             component.badge = badgeImage;
@@ -870,6 +868,16 @@ namespace FireReady.EditorTools
             component.score = score;
             component.outcome = outcome;
             return component;
+        }
+
+        /// <summary>A text line in a history row: left of the score column, top-anchored.</summary>
+        static void TopLine(RectTransform rect, float top, float height)
+        {
+            rect.anchorMin = new Vector2(0, 1);
+            rect.anchorMax = new Vector2(1, 1);
+            rect.pivot = new Vector2(0, 1);
+            rect.offsetMin = new Vector2(64 * Pt, -(top + height) * Pt);
+            rect.offsetMax = new Vector2(-72 * Pt, -top * Pt);
         }
 
         // ---- Helpers ---------------------------------------------------------------------
