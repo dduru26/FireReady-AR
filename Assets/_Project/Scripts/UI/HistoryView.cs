@@ -21,7 +21,8 @@ namespace FireReady.UI
         [SerializeField] TMP_Text emptyLabel;
         [SerializeField] Button deleteAllButton;
         [SerializeField] TMP_Text deleteAllLabel;
-        [SerializeField] int maxRows = 8;
+        [SerializeField] ScrollRect scroll;
+        [SerializeField] int maxRows = 50;
 
         ISessionHistory m_History;
         readonly List<HistoryRow> m_Rows = new List<HistoryRow>();
@@ -90,6 +91,12 @@ namespace FireReady.UI
                 if (used) Fill(m_Rows[i], sessions[i]);
             }
             emptyLabel.gameObject.SetActive(sessions.Count == 0);
+            if (scroll != null)
+            {
+                // Rebuild the layout now so the list opens at the newest session.
+                Canvas.ForceUpdateCanvases();
+                scroll.verticalNormalizedPosition = 1f;
+            }
             deleteAllButton.gameObject.SetActive(sessions.Count > 0);
         }
 

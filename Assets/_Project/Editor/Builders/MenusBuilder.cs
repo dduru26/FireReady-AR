@@ -726,8 +726,29 @@ namespace FireReady.EditorTools
             var best = Stat(stats, "Best score");
             var putOut = Stat(stats, "Put out");
 
-            var list = Node("List", root);
-            Top(list, 248, 0, stretch: true, margin: 24);
+            // Scrollable list between the stats and the Delete button, so every saved session shows.
+            var viewport = Node("List Viewport", root);
+            viewport.anchorMin = Vector2.zero;
+            viewport.anchorMax = Vector2.one;
+            viewport.offsetMin = new Vector2(24 * Pt, 88 * Pt);
+            viewport.offsetMax = new Vector2(-24 * Pt, -248 * Pt);
+            viewport.gameObject.AddComponent<RectMask2D>();
+            viewport.gameObject.AddComponent<Image>().color = new Color(1, 1, 1, 0f); // catches drags
+
+            var list = Node("List", viewport);
+            list.anchorMin = new Vector2(0, 1);
+            list.anchorMax = new Vector2(1, 1);
+            list.pivot = new Vector2(0.5f, 1);
+            list.anchoredPosition = Vector2.zero;
+            list.sizeDelta = Vector2.zero;
+
+            var scroll = viewport.gameObject.AddComponent<ScrollRect>();
+            scroll.viewport = viewport;
+            scroll.content = list;
+            scroll.horizontal = false;
+            scroll.vertical = true;
+            scroll.movementType = ScrollRect.MovementType.Elastic;
+            scroll.scrollSensitivity = 20f;
             var ll = list.gameObject.AddComponent<VerticalLayoutGroup>();
             ll.spacing = 8 * Pt;
             ll.childControlWidth = ll.childControlHeight = true;
@@ -757,12 +778,13 @@ namespace FireReady.EditorTools
             SetRef(view, "bestValue", best);
             SetRef(view, "putOutValue", putOut);
             SetRef(view, "listParent", list);
+            SetRef(view, "scroll", scroll);
             SetRef(view, "rowTemplate", template);
             SetRef(view, "emptyLabel", empty);
             SetRef(view, "deleteAllButton", deleteButton);
             SetRef(view, "deleteAllLabel", deleteLabel);
             var so = new SerializedObject(view);
-            so.FindProperty("maxRows").intValue = 6;
+            so.FindProperty("maxRows").intValue = 50; // the repository keeps at most 50
             so.ApplyModifiedPropertiesWithoutUndo();
             return view;
         }
